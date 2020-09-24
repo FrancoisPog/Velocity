@@ -52,6 +52,13 @@ public class AbonneTest {
     }
 
     @Test
+    public void InvalidRIB_badKey() throws IncorrectNameException{
+        String rib = "10278-08000-00022270603-72";
+        Abonne a = new Abonne("John",rib);
+        Assert.assertTrue(a.estBloque());
+    }
+
+    @Test
     public void InvalidRIB_letters() throws IncorrectNameException{
         String rib = "102A8-08000-00022270603-02";
         Abonne a = new Abonne("John",rib);
@@ -88,19 +95,32 @@ public class AbonneTest {
 
         Assert.assertTrue(fred.equals(fred));
         Assert.assertFalse(jube.equals(fred));
-        Assert.assertFalse(jube.equals(new String()));
-        Assert.assertTrue(fred.equals((Object)fred));
     }
 
     @Test
     public void Equals_diffType() throws IncorrectNameException{
         Abonne fred = new Abonne("Frédéric Dadeau");
-        Abonne jube = new Abonne("Julien Bernard");
 
-        Assert.assertFalse(jube.equals(new String()));
+        Assert.assertFalse(fred.equals(new String()));
         Assert.assertTrue(fred.equals((Object)fred));
     }
 
+    @Test
+    public void Equals_null() throws IncorrectNameException{
+        Abonne fred = new Abonne("Frédéric Dadeau");
+
+        Assert.assertFalse(fred.equals(null));
+    }
+
+    @Test
+    public void Hash() throws IncorrectNameException{
+        Abonne fred = new Abonne("Frédéric Dadeau");
+        Abonne jube = new Abonne("Julien Bernard");
+
+        Assert.assertEquals(fred.hashCode(),fred.hashCode());
+        Assert.assertNotEquals(jube.hashCode(),fred.hashCode());
+        Assert.assertNotEquals(jube.hashCode(),new Object().hashCode());
+    }
 
     @Test
     public void Name() throws IncorrectNameException {

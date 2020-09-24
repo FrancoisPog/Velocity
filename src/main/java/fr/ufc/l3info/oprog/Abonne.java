@@ -1,5 +1,6 @@
 package fr.ufc.l3info.oprog;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -102,24 +103,18 @@ public class Abonne {
         return this.isBlocked;
     }
 
-    /**
-     * permet de tester si deux abonnés sont identiques. Pour cela, on vérifiera si leur identifiant est le même.
-     * @param a l'abonné avec lequel est comparé l'instance courante.
-     * @return true si les deux objets ont le même ID, false sinon.
-     */
-    public boolean equals(Object a) {
-        if(!(a instanceof Abonne)){
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()){
             return false;
         }
-        return this.id == ((Abonne)a).id;
+        Abonne abonne = (Abonne) o;
+        return id == abonne.id;
     }
 
-    /**
-     * Utilisée en interne par Java pour obtenir un hash de l'objet. Cette méthode est utilisée pour les structures de collection de type HashSet ou HashMap.
-     * @return le hash de l'instance courante.
-     */
+    @Override
     public int hashCode() {
-        return 0;
+        return Objects.hash(id);
     }
 
     /**
