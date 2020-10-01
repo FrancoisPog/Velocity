@@ -12,7 +12,7 @@ public class Abonne {
 
     private String name;
     private String rib;
-    private int id;
+    private final int id;
     private boolean isBlocked;
 
     /**
@@ -128,7 +128,7 @@ public class Abonne {
         }
         String [] ribData = rib.split("-");
         long key = 97 - ((89 * Long.parseLong(ribData[0]) + 15 * Long.parseLong(ribData[1]) + 3 * Long.parseLong(ribData[2])) % 97 );
-        return key == Integer.parseInt(ribData[3]);
+        return key == Long.parseLong(ribData[3]);
 
     }
 
