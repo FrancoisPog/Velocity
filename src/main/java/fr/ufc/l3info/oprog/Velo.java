@@ -10,22 +10,22 @@ public class Velo implements IVelo {
     private final char type;
     private double kilometrage;
 
-    public Velo(){
+    public Velo() {
         this('m');
     }
 
-    public Velo(char t){
+    public Velo(char t) {
         this.estAbime = false;
         this.estDecroche = true;
         this.kilometrage = 0;
 
         t = Character.toLowerCase(t);
 
-        if(t == 'h'){
+        if (t == 'h') {
             this.type = 'h';
-        }else if(t == 'f'){
+        } else if (t == 'f') {
             this.type = 'f';
-        }else{
+        } else {
             this.type = 'm';
         }
 
@@ -43,7 +43,7 @@ public class Velo implements IVelo {
 
     @Override
     public void parcourir(double km) {
-        if(this.estDecroche && km > 0){
+        if (this.estDecroche && km > 0) {
             this.kilometrage += km;
         }
     }
@@ -55,9 +55,9 @@ public class Velo implements IVelo {
 
     @Override
     public int decrocher() {
-        if(this.estDecroche){
+        if (this.estDecroche) {
             return -1;
-        }else{
+        } else {
             this.estDecroche = true;
             return 0;
         }
@@ -66,10 +66,10 @@ public class Velo implements IVelo {
     @Override
 
     public int arrimer() {
-        if(this.estDecroche){
+        if (this.estDecroche) {
             this.estDecroche = false;
             return 0;
-        }else{
+        } else {
             return -1;
         }
     }
@@ -86,7 +86,7 @@ public class Velo implements IVelo {
 
     @Override
     public int reviser() {
-        if(!this.estDecroche){
+        if (!this.estDecroche) {
             return -1;
         }
 
@@ -96,10 +96,10 @@ public class Velo implements IVelo {
 
     @Override
     public int reparer() {
-        if(!this.estDecroche){
+        if (!this.estDecroche) {
             return -1;
         }
-        if(this.estAbime){
+        if (this.estAbime) {
             this.estAbime = false;
             return 0;
         }
@@ -108,20 +108,20 @@ public class Velo implements IVelo {
 
     }
 
-    public String toString(){
+    public String toString() {
         String res = "Vélo cadre ";
 
-        if(this.type == 'f'){
+        if (this.type == 'f') {
             res += "femme - ";
-        }else if(this.type == 'h'){
+        } else if (this.type == 'h') {
             res += "homme - ";
-        }else{
+        } else {
             res += "mixte - ";
         }
 
-        res+= String.format("%.1f km", this.kilometrage);
+        res += String.format("%.1f km", this.kilometrage);
 
-        if(prochaineRevision() <= 0){
+        if (prochaineRevision() <= 0) {
             res += " (révision nécessaire)";
         }
 
