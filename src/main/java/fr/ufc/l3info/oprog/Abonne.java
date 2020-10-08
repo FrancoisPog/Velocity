@@ -14,6 +14,8 @@ public class Abonne {
     private String rib;
     private final int id;
     private boolean estBloque;
+    // TODO : Différencier type de blocage
+
 
     /**
      * Créé un abonné dont le nom est passé en paramètre, sans informations bancaires.
@@ -97,6 +99,9 @@ public class Abonne {
      * Permet de débloquer un abonné.
      */
     public void debloquer() {
+        if(rib == null){
+            return;
+        }
         this.estBloque = false;
     }
 

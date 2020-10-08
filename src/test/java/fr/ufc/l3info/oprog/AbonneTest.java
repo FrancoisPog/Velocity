@@ -163,6 +163,15 @@ public class AbonneTest {
 
     }
 
+    @Test
+    public void BlockUnblock_norib() throws IncorrectNameException{
+        Abonne a = new Abonne("Neil Armstrong");
+        Assert.assertTrue(a.estBloque());
+        a.debloquer();
+        Assert.assertTrue(a.estBloque());
+
+    }
+
 
 
 
