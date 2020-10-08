@@ -14,7 +14,7 @@ public class Abonne {
     private String rib;
     private final int id;
     private boolean estBloque;
-    // TODO : Différencier type de blocage
+
 
 
     /**
@@ -26,13 +26,16 @@ public class Abonne {
      * @throws IncorrectNameException si le nom de l'abonné n'est pas correct.
      */
     public Abonne(String nom) throws IncorrectNameException {
+        if(nom == null){
+            throw new IncorrectNameException();
+        }
         nom = nom.trim();
         if (nom.length() == 0 || !Pattern.matches("^[\\p{L}]+([ -][\\p{L}]+)*$", nom)) {
             throw new IncorrectNameException();
         }
 
         this.nom = nom;
-        this.estBloque = true;
+        this.estBloque = false;
         this.rib = null;
         this.id = Abonne.nombreInstances++;
 
@@ -49,12 +52,9 @@ public class Abonne {
     public Abonne(String nom, String rib) throws IncorrectNameException {
         this(nom);
 
-        if (!ribEstValide(rib)) {
-            return;
+        if (ribEstValide(rib)) {
+            this.rib = rib;
         }
-
-        this.rib = rib;
-        this.estBloque = false;
     }
 
     /**
@@ -83,7 +83,6 @@ public class Abonne {
     public void miseAJourRIB(String rib) {
         if (ribEstValide(rib)) {
             this.rib = rib;
-            this.estBloque = false;
         }
 
     }
@@ -99,9 +98,6 @@ public class Abonne {
      * Permet de débloquer un abonné.
      */
     public void debloquer() {
-        if(rib == null){
-            return;
-        }
         this.estBloque = false;
     }
 
@@ -111,7 +107,7 @@ public class Abonne {
      * @return true si l'abonné est considéré comme bloqué, false sinon.
      */
     public boolean estBloque() {
-        return this.estBloque;
+        return this.estBloque || rib == null;
     }
 
     @Override
@@ -135,7 +131,7 @@ public class Abonne {
      * @return True si le rib est valide, faux sinon
      */
     private boolean ribEstValide(String rib) {
-        if (!Pattern.matches("^(\\d{5}-){2}\\d{11}-\\d{2}$", rib)) {
+        if (rib == null || !Pattern.matches("^(\\d{5}-){2}\\d{11}-\\d{2}$", rib)) {
             return false;
         }
         String[] ribData = rib.split("-");
