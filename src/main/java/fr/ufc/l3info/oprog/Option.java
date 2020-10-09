@@ -59,7 +59,7 @@ public abstract class Option implements IVelo {
 
     @Override
     public int reparer() {
-        return this._original.reviser();
+        return this._original.reparer();
     }
 
     @Override

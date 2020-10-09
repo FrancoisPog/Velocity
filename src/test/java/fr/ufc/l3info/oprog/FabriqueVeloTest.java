@@ -11,7 +11,17 @@ import static org.junit.Assert.assertTrue;
 
 public class FabriqueVeloTest {
 
+    final String regex_toString = "^Vélo cadre (homme|femme|mixte)(, (cadre aluminium|freins à disque|assistance électrique|suspension arrière|suspension avant)){0,5} - \\d+.\\d km$";
+
     private FabriqueVelo fabrique;
+
+    final String[][] options = {
+            {"CADRE_ALUMINIUM", "cadre aluminium"},
+            {"SUSPENSION_AVANT", "suspension avant"},
+            {"SUSPENSION_ARRIERE", "suspension arrière"},
+            {"FREINS_DISQUE", "freins à disque"},
+            {"ASSISTANCE_ELECTRIQUE", "assistance électrique"}
+    };
 
     @Before
     public void initFabrique(){
@@ -39,4 +49,11 @@ public class FabriqueVeloTest {
     }
 
 
+    @Test
+    public void MemeOptionPlusieursFois() {
+        for(int i = 0 ; i < options.length ; ++i){
+
+        }
+        // split().length == 2
+    }
 }

@@ -90,6 +90,7 @@ public class Velo implements IVelo {
             return -1;
         }
 
+        this.estAbime = false;
         this.kilometrage = 0;
         return 0;
     }
