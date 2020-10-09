@@ -2,13 +2,14 @@ package fr.ufc.l3info.oprog;
 
 public class Velo implements IVelo {
 
-    private final static double TARIF = 0.2;
+    private final static double TARIF = 2.0;
     private final static double DISTANCE_MAX_ENTRE_REVISIONS = 500.0;
 
     private boolean estAbime;
     private boolean estDecroche;
     private final char type;
     private double kilometrage;
+    private double kmDerniereRevision;
 
     public Velo() {
         this('m');
@@ -38,7 +39,7 @@ public class Velo implements IVelo {
 
     @Override
     public double prochaineRevision() {
-        return DISTANCE_MAX_ENTRE_REVISIONS - this.kilometrage();
+        return DISTANCE_MAX_ENTRE_REVISIONS - (this.kilometrage() - this.kmDerniereRevision);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class Velo implements IVelo {
         }
 
         this.estAbime = false;
-        this.kilometrage = 0;
+        this.kmDerniereRevision = this.kilometrage;
         return 0;
     }
 
