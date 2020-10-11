@@ -57,7 +57,7 @@ public class FabriqueVeloTest {
             //System.out.println("size : "+opt.length);
 
             IVelo velo = fabrique.construire('m',opt);
-            System.out.println(velo.toString());
+            //System.out.println(velo.toString());
 
             assertTrue(Pattern.matches(regex_toString,velo.toString()));
             assertEquals(i + 2, velo.toString().split(",").length);

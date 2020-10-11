@@ -6,6 +6,9 @@ public abstract class Option implements IVelo {
     String description;
 
     public Option(IVelo original, double tarif, String description){
+        if(original == null){
+            original = new Velo();
+        }
         this._original = original;
         this.tarifOption = tarif;
         this.description = description;
