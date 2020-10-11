@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
+
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
@@ -39,7 +39,7 @@ public class FabriqueVeloTest {
 
     @Test
     public void uneSeuleInstance(){
-        assertTrue(FabriqueVelo.getInstance().equals(FabriqueVelo.getInstance()));
+        assertEquals(FabriqueVelo.getInstance(), FabriqueVelo.getInstance());
     }
 
 
@@ -68,5 +68,32 @@ public class FabriqueVeloTest {
 
         }
 
+    }
+
+    @Test
+    public void optionCadreHomme(){
+        assertEquals("Vélo cadre homme, assistance électrique - 0.0 km",fabrique.construire('h',"ASSISTANCE_ELECTRIQUE").toString());
+    }
+
+    @Test
+    public void optionCadreFemme(){
+        assertEquals("Vélo cadre femme, freins à disque - 0.0 km",fabrique.construire('f',"FREINS_DISQUE").toString());
+    }
+
+    @Test
+    public void sansOption(){
+        assertEquals("Vélo cadre mixte - 0.0 km",fabrique.construire('\0').toString());
+    }
+
+    @Test
+    public void optionNull(){
+     IVelo velo = fabrique.construire('H',null,"SUSPENSION_ARRIERE",null);
+     assertEquals("Vélo cadre homme, suspension arrière - 0.0 km",velo.toString());
+    }
+
+    @Test
+    public void optionUnknown(){
+        IVelo velo = fabrique.construire('F',"arzrgg","SUSPENSION_ARRIERE","rgreg");
+        assertEquals("Vélo cadre femme, suspension arrière - 0.0 km",velo.toString());
     }
 }

@@ -22,6 +22,9 @@ public class FabriqueVelo {
         boolean [] flags = {false,false,false,false,false};
 
         for(String opt : options){
+            if(opt == null){
+                continue;
+            }
             switch (opt){
                 case "CADRE_ALUMINIUM" : {
                     if(!flags[0]){
