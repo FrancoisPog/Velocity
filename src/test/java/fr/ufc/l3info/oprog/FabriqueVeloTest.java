@@ -47,24 +47,24 @@ public class FabriqueVeloTest {
     public void MemeOptionPlusieursFois() {
 
         for(int i = 0 ; i < options.length ; i++){
-            IVelo velo = new Velo();
+            String[] opt = new String[(i+1)*2];
 
-            //System.out.println("i : "+i);
-
-            String[] opt = new String[i*2];
-
-            for(int j = 0 ; j < i*2 ; j = j + 2){
-                //System.out.print(j);
+            for(int j = 0 ; j <= i*2 ; j = j + 2){
                 opt[j] = options[j/2][0];
                 opt[j+1] = options[j/2][0];
             }
 
             //System.out.println("size : "+opt.length);
 
-            velo = fabrique.construire('m',opt);
+            IVelo velo = fabrique.construire('m',opt);
             System.out.println(velo.toString());
+
             assertTrue(Pattern.matches(regex_toString,velo.toString()));
-            assertEquals((int)i +1, velo.toString().split(",").length);
+            assertEquals(i + 2, velo.toString().split(",").length);
+
+            for(int j = 0 ; j < i ; j++){
+                assertTrue(velo.toString().contains(options[j][1]));
+            }
 
         }
 
