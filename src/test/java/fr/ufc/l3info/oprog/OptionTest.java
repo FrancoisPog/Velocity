@@ -14,7 +14,7 @@ public class OptionTest {
 
 
     @Before
-    public void InitVelo() {
+    public void InitVelos() {
         veloBase = new Velo();
 
         veloToutesOptions = new Velo();
@@ -23,17 +23,6 @@ public class OptionTest {
         veloToutesOptions = new OptAssistanceElectrique(veloToutesOptions);
         veloToutesOptions = new OptCadreAlu(veloToutesOptions);
         veloToutesOptions = new OptSuspensionAvant(veloToutesOptions);
-    }
-
-    @Test
-    public void toStringTest() {
-        veloBase = new OptCadreAlu(veloBase);
-        veloBase = new OptFreinsDisque(veloBase);
-        veloBase = new OptFreinsDisque(veloBase);
-        veloBase = new OptFreinsDisque(veloBase);
-        veloBase = new OptFreinsDisque(veloBase);
-
-        System.out.println(veloBase);
     }
 
     @Test
@@ -58,23 +47,56 @@ public class OptionTest {
     }
 
     @Test
-    public void toStringOk(){
+    public void toStringVeloBase(){
         // Pas de virgules
         assertTrue(Pattern.matches(regex_toString,veloBase.toString()));
         assertEquals(1,veloBase.toString().split(",").length);
 
         veloBase = new OptFreinsDisque(veloBase);
 
+        // Contient une virgule, et le nom de l'option seulement
         assertTrue(Pattern.matches(regex_toString,veloBase.toString()));
         assertEquals(2,veloBase.toString().split(",").length);
         assertTrue(veloBase.toString().contains("freins à disque"));
+        assertFalse(veloBase.toString().contains("suspension arrière"));
 
+        // Contient deux virgules, et le nom des deux options seulement
+        veloBase = new OptSuspensionArriere(veloBase);
+        assertTrue(Pattern.matches(regex_toString,veloBase.toString()));
+        assertEquals(3,veloBase.toString().split(",").length);
+        assertTrue(veloBase.toString().contains("freins à disque"));
+        assertTrue(veloBase.toString().contains("suspension arrière"));
+    }
+
+    @Test
+    public void toStringVeloOptions(){
         assertTrue(Pattern.matches(regex_toString,veloToutesOptions.toString()));
         assertEquals(6,veloToutesOptions.toString().split(",").length);
         assertTrue(veloToutesOptions.toString().contains("freins à disque"));
         assertTrue(veloToutesOptions.toString().contains("suspension arrière"));
         assertTrue(veloToutesOptions.toString().contains("suspension avant"));
+        assertTrue(veloToutesOptions.toString().contains("assistance électrique"));
+        assertTrue(veloToutesOptions.toString().contains("cadre aluminium"));
+    }
 
+    @Test
+    public void tarifToutesOptions(){
+        assertEquals(5.5, veloToutesOptions.tarif(),1e-3);
+    }
+
+    @Test
+    public void tarifVelo(){
+        assertEquals(2,veloBase.tarif(),1e-3);
+        veloBase = new OptSuspensionArriere(veloBase);
+        assertEquals(2.5,veloBase.tarif(),1e-3);
+        veloBase = new OptSuspensionAvant(veloBase);
+        assertEquals(3,veloBase.tarif(),1e-3);
+        veloBase = new OptCadreAlu(veloBase);
+        assertEquals(3.2,veloBase.tarif(),1e-3);
+        veloBase = new OptFreinsDisque(veloBase);
+        assertEquals(3.5,veloBase.tarif(),1e-3);
+        veloBase = new OptAssistanceElectrique(veloBase);
+        assertEquals(5.5,veloBase.tarif(),1e-3);
     }
 
 

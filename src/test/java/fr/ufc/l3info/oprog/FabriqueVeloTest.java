@@ -5,9 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FabriqueVeloTest {
 
@@ -28,32 +29,44 @@ public class FabriqueVeloTest {
         fabrique = FabriqueVelo.getInstance();
     }
 
-    @Test
-    public void fabriqueTest(){
-        IVelo velo = fabrique.construire('F',"SUSPENSION_AVANT","ASSISTANCE_ELECTRIQUE","SUSPENSION_AVANT","SUSPENSION_ARRIERE");
-        System.out.println(velo.toString());
-    }
 
     @Test
-    public void constructorIsPrivate(){
+    public void constructeurPrive(){
         for (Constructor c : FabriqueVelo.class.getDeclaredConstructors()) {
             assertFalse(c.isAccessible());
         }
-
-
     }
 
     @Test
-    public void oneInstanceOnly(){
+    public void uneSeuleInstance(){
         assertTrue(FabriqueVelo.getInstance().equals(FabriqueVelo.getInstance()));
     }
 
 
     @Test
     public void MemeOptionPlusieursFois() {
-        for(int i = 0 ; i < options.length ; ++i){
+
+        for(int i = 0 ; i < options.length ; i++){
+            IVelo velo = new Velo();
+
+            //System.out.println("i : "+i);
+
+            String[] opt = new String[i*2];
+
+            for(int j = 0 ; j < i*2 ; j = j + 2){
+                //System.out.print(j);
+                opt[j] = options[j/2][0];
+                opt[j+1] = options[j/2][0];
+            }
+
+            //System.out.println("size : "+opt.length);
+
+            velo = fabrique.construire('m',opt);
+            System.out.println(velo.toString());
+            assertTrue(Pattern.matches(regex_toString,velo.toString()));
+            assertEquals((int)i +1, velo.toString().split(",").length);
 
         }
-        // split().length == 2
+
     }
 }
