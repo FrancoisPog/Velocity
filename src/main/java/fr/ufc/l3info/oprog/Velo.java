@@ -1,5 +1,7 @@
 package fr.ufc.l3info.oprog;
 
+import java.util.Locale;
+
 public class Velo implements IVelo {
 
     private final static double TARIF = 2.0;
@@ -111,6 +113,7 @@ public class Velo implements IVelo {
     }
 
     public String toString() {
+
         String res = "Vélo cadre ";
 
         if (this.type == 'f') {
@@ -121,7 +124,7 @@ public class Velo implements IVelo {
             res += "mixte - ";
         }
 
-        res += String.format("%.1f km", this.kilometrage);
+        res += String.format(Locale.ENGLISH,"%.1f km", this.kilometrage);
 
         if (prochaineRevision() <= 0) {
             res += " (révision nécessaire)";
