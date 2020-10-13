@@ -29,6 +29,10 @@ public class FabriqueVeloTest {
         fabrique = FabriqueVelo.getInstance();
     }
 
+    @Test
+    public void notNull(){
+        assertNotNull(fabrique);
+    }
 
     @Test
     public void constructeurPrive(){
@@ -40,6 +44,11 @@ public class FabriqueVeloTest {
     @Test
     public void uneSeuleInstance(){
         assertEquals(FabriqueVelo.getInstance(), FabriqueVelo.getInstance());
+    }
+
+    @Test
+    public void veloNotNull(){
+        assertNotNull(fabrique.construire('h',"ASSISTANCE_ELECTRIQUE"));
     }
 
 
@@ -72,11 +81,13 @@ public class FabriqueVeloTest {
 
     @Test
     public void optionCadreHomme(){
+        assertEquals("Vélo cadre homme, assistance électrique - 0.0 km",fabrique.construire('H',"ASSISTANCE_ELECTRIQUE").toString());
         assertEquals("Vélo cadre homme, assistance électrique - 0.0 km",fabrique.construire('h',"ASSISTANCE_ELECTRIQUE").toString());
     }
 
     @Test
     public void optionCadreFemme(){
+        assertEquals("Vélo cadre femme, freins à disque - 0.0 km",fabrique.construire('F',"FREINS_DISQUE").toString());
         assertEquals("Vélo cadre femme, freins à disque - 0.0 km",fabrique.construire('f',"FREINS_DISQUE").toString());
     }
 
