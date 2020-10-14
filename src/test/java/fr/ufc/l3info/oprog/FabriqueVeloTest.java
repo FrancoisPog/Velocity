@@ -25,53 +25,53 @@ public class FabriqueVeloTest {
     };
 
     @Before
-    public void initFabrique(){
+    public void initFabrique() {
         fabrique = FabriqueVelo.getInstance();
     }
 
     @Test
-    public void notNull(){
+    public void notNull() {
         assertNotNull(fabrique);
     }
 
     @Test
-    public void constructeurPrive(){
+    public void constructeurPrive() {
         for (Constructor c : FabriqueVelo.class.getDeclaredConstructors()) {
             assertFalse(c.isAccessible());
         }
     }
 
     @Test
-    public void uneSeuleInstance(){
+    public void uneSeuleInstance() {
         assertEquals(FabriqueVelo.getInstance(), FabriqueVelo.getInstance());
     }
 
     @Test
-    public void veloNotNull(){
-        assertNotNull(fabrique.construire('h',"ASSISTANCE_ELECTRIQUE"));
+    public void veloNotNull() {
+        assertNotNull(fabrique.construire('h', "ASSISTANCE_ELECTRIQUE"));
     }
 
 
     @Test
     public void MemeOptionPlusieursFois() {
 
-        for(int i = 0 ; i < options.length ; i++){
-            String[] opt = new String[(i+1)*2];
+        for (int i = 0; i < options.length; i++) {
+            String[] opt = new String[(i + 1) * 2];
 
-            for(int j = 0 ; j <= i*2 ; j = j + 2){
-                opt[j] = options[j/2][0];
-                opt[j+1] = options[j/2][0];
+            for (int j = 0; j <= i * 2; j = j + 2) {
+                opt[j] = options[j / 2][0];
+                opt[j + 1] = options[j / 2][0];
             }
 
             //System.out.println("size : "+opt.length);
 
-            IVelo velo = fabrique.construire('m',opt);
+            IVelo velo = fabrique.construire('m', opt);
             //System.out.println(velo.toString());
 
-            assertTrue(Pattern.matches(regex_toString,velo.toString()));
+            assertTrue(Pattern.matches(regex_toString, velo.toString()));
             assertEquals(i + 2, velo.toString().split(",").length);
 
-            for(int j = 0 ; j < i ; j++){
+            for (int j = 0; j < i; j++) {
                 assertTrue(velo.toString().contains(options[j][1]));
             }
 
@@ -80,31 +80,42 @@ public class FabriqueVeloTest {
     }
 
     @Test
-    public void optionCadreHomme(){
-        assertEquals("Vélo cadre homme, assistance électrique - 0.0 km",fabrique.construire('H',"ASSISTANCE_ELECTRIQUE").toString());
-        assertEquals("Vélo cadre homme, assistance électrique - 0.0 km",fabrique.construire('h',"ASSISTANCE_ELECTRIQUE").toString());
+    public void optionCadreHomme() {
+        assertEquals("Vélo cadre homme, assistance électrique - 0.0 km", fabrique.construire('H', "ASSISTANCE_ELECTRIQUE").toString());
+        assertEquals("Vélo cadre homme, freins à disque - 0.0 km", fabrique.construire('h', "FREINS_DISQUE").toString());
     }
 
     @Test
-    public void optionCadreFemme(){
-        assertEquals("Vélo cadre femme, freins à disque - 0.0 km",fabrique.construire('F',"FREINS_DISQUE").toString());
-        assertEquals("Vélo cadre femme, freins à disque - 0.0 km",fabrique.construire('f',"FREINS_DISQUE").toString());
+    public void optionCadreFemme() {
+        IVelo velo = fabrique.construire('F', "FREINS_DISQUE");
+        assertEquals("Vélo cadre femme, freins à disque - 0.0 km", velo.toString());
+        assertEquals(2.3, velo.tarif(),1e-3);
     }
 
     @Test
-    public void sansOption(){
-        assertEquals("Vélo cadre mixte - 0.0 km",fabrique.construire('\0').toString());
+    public void sansOption() {
+        assertEquals("Vélo cadre mixte - 0.0 km", fabrique.construire('\0').toString());
     }
 
     @Test
-    public void optionNull(){
-     IVelo velo = fabrique.construire('H',null,"SUSPENSION_ARRIERE",null);
-     assertEquals("Vélo cadre homme, suspension arrière - 0.0 km",velo.toString());
+    public void optionsNull() {
+        IVelo velo = fabrique.construire('H', null, "SUSPENSION_ARRIERE", null);
+        assertEquals("Vélo cadre homme, suspension arrière - 0.0 km", velo.toString());
+        assertEquals(2.5, velo.tarif(), 1e-3);
+
     }
 
     @Test
-    public void optionUnknown(){
-        IVelo velo = fabrique.construire('F',"arzrgg","SUSPENSION_ARRIERE","rgreg");
-        assertEquals("Vélo cadre femme, suspension arrière - 0.0 km",velo.toString());
+    public void optionUnknown() {
+        IVelo velo = fabrique.construire('F', "arzrgg", "SUSPENSION_ARRIERE", "rgreg");
+        assertEquals("Vélo cadre femme, suspension arrière - 0.0 km", velo.toString());
+        assertEquals(2.5, velo.tarif(), 1e-3);
+    }
+
+    @Test
+    public void optionNull() {
+        IVelo velo = fabrique.construire('f', null);
+        assertEquals("Vélo cadre femme - 0.0 km", velo.toString());
+        assertEquals(2.0, velo.tarif(), 1e-3);
     }
 }

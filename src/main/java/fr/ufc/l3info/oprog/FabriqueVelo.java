@@ -1,8 +1,5 @@
 package fr.ufc.l3info.oprog;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class FabriqueVelo {
 
     public static FabriqueVelo INSTANCE = null;
@@ -20,6 +17,10 @@ public class FabriqueVelo {
         IVelo velo = new Velo(t);
 
         boolean [] flags = {false,false,false,false,false};
+
+        if(options == null){
+            return velo;
+        }
 
         for(String opt : options){
             if(opt == null){
