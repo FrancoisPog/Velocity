@@ -51,9 +51,18 @@ public class FabriqueVeloTest {
         assertNotNull(fabrique.construire('h', "ASSISTANCE_ELECTRIQUE"));
     }
 
+    @Test
+    public void optionValide(){
+        IVelo velo = fabrique.construire('f',"CADRE_ALUMINIUM");
+        assertTrue(Pattern.matches(regex_toString,velo.toString()));
+        assertTrue(velo.toString().contains("cadre aluminium"));
+        assertEquals(2,velo.toString().split(",").length);
+        assertEquals(2.2,velo.tarif(),1e-3);
+    }
+
 
     @Test
-    public void MemeOptionPlusieursFois() {
+    public void memeOptionPlusieursFois() {
 
         for (int i = 0; i < options.length; i++) {
             String[] opt = new String[(i + 1) * 2];
@@ -63,10 +72,7 @@ public class FabriqueVeloTest {
                 opt[j + 1] = options[j / 2][0];
             }
 
-            //System.out.println("size : "+opt.length);
-
             IVelo velo = fabrique.construire('m', opt);
-            //System.out.println(velo.toString());
 
             assertTrue(Pattern.matches(regex_toString, velo.toString()));
             assertEquals(i + 2, velo.toString().split(",").length);
@@ -102,7 +108,6 @@ public class FabriqueVeloTest {
         IVelo velo = fabrique.construire('H', null, "SUSPENSION_ARRIERE", null);
         assertEquals("Vélo cadre homme, suspension arrière - 0.0 km", velo.toString());
         assertEquals(2.5, velo.tarif(), 1e-3);
-
     }
 
     @Test
@@ -117,5 +122,17 @@ public class FabriqueVeloTest {
         IVelo velo = fabrique.construire('f', null);
         assertEquals("Vélo cadre femme - 0.0 km", velo.toString());
         assertEquals(2.0, velo.tarif(), 1e-3);
+    }
+
+    @Test
+    public void toutesOptions(){
+        IVelo velo = fabrique.construire('\\',"CADRE_ALUMINIUM",null,"FREINS","FREINS_DISQUE","SUSPENSION_ARRIERE","SUSPENSION_AVANT","ASSISTANCE_ELECTRIQUE","SUSPENSION_ARRIERE");
+        assertTrue(Pattern.matches(regex_toString,velo.toString()));
+        assertEquals(5.5,velo.tarif(),1e-3);
+        assertEquals(6,velo.toString().split(",").length);
+        for(String[] opts : options){
+            assertTrue(velo.toString().contains(opts[1]));
+        }
+        assertTrue(velo.toString().startsWith("Vélo cadre mixte"));
     }
 }
