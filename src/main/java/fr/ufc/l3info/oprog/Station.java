@@ -65,7 +65,9 @@ public class Station {
         if (a.estBloque() || this.registre == null || this.registre.nbEmpruntsEnCours(a) != 0) {
             return null;
         }
-        this.registre.emprunter(a, this.velos[b-1], maintenant());
+        if(this.registre.emprunter(a, this.velos[b-1], maintenant()) != 0 ){
+            return null;
+        }
         IVelo v = veloALaBorne(b);
         if (v != null) {
             this.velos[b-1] = null;

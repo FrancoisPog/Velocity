@@ -2,6 +2,7 @@ package fr.ufc.l3info.oprog;
 
 
 
+import jdk.nashorn.internal.parser.TokenKind;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,6 +48,14 @@ public class StationTest {
     }
 
     @Test
+    public void constructeurCapaciteNegative(){
+        station = new Station(NOM,LATITUDE,LONGITUDE, -3);
+        assertEquals(NOM,station.getNom());
+        assertEquals(-3,station.capacite());
+        assertEquals(0,station.nbBornesLibres());
+    }
+
+    @Test
     public void toutesBornesLibres(){
         for(int i = 0 ; i < CAPACITE ; ++i){
             assertNull(station.veloALaBorne(i));
@@ -62,35 +71,37 @@ public class StationTest {
                             MOCKS
      ****************************************************/
 
-
-    public IRegistre registreToujoursDAccord(){
+    public IRegistre createIRegistreMock(int retEmprunter, int retNbEmprunt, int retRetourner){
         IRegistre registre = mock(IRegistre.class);
-        when(registre.emprunter(ArgumentMatchers.<Abonne>any(),ArgumentMatchers.<IVelo>any(),anyLong())).thenReturn(0);
-        when(registre.nbEmpruntsEnCours(ArgumentMatchers.<Abonne>any())).thenReturn(0);
-        when(registre.retourner(ArgumentMatchers.<IVelo>any(),anyLong())).thenReturn(0);
+        when(registre.emprunter(ArgumentMatchers.<Abonne>any(),ArgumentMatchers.<IVelo>any(),anyLong())).thenReturn(retEmprunter);
+        when(registre.nbEmpruntsEnCours(ArgumentMatchers.<Abonne>any())).thenReturn(retNbEmprunt);
+        when(registre.retourner(ArgumentMatchers.<IVelo>any(),anyLong())).thenReturn(retRetourner);
         return registre;
     }
 
+    public Abonne createAbonneMock(boolean retEstBloque){
+        Abonne abonne = mock(Abonne.class);
+        when(abonne.estBloque()).thenReturn(retEstBloque);
+        return abonne;
+    }
 
+    public IVelo createIVeloMock(int retArrimer){
+        IVelo velo = mock(Velo.class);
+        when(velo.arrimer()).thenReturn(retArrimer);
+        return velo;
+    }
 
 
     /****************************************************
                         TESTS AVEC MOCKS
      ****************************************************/
 
-    @Test
-    public void arrimerOk(){
-        IRegistre registre = registreToujoursDAccord();
 
-        station.setRegistre(registre);
-        assertEquals(0,station.arrimerVelo(new Velo(),3));
-    }
 
     @Test
     public void emprunterOk() {
-        IRegistre registre = registreToujoursDAccord();
-        Abonne abonne = mock(Abonne.class);
-        when(abonne.estBloque()).thenReturn(false);
+        IRegistre registre = createIRegistreMock(0,0,0);
+        Abonne abonne = createAbonneMock(false);
 
         station.setRegistre(registre);
         assertEquals(0,station.arrimerVelo(new Velo(),3));
@@ -101,10 +112,8 @@ public class StationTest {
 
     @Test
     public void emprunterAbonneBloque() {
-        IRegistre registre = registreToujoursDAccord();
-
-        Abonne abonne = mock(Abonne.class);
-        when(abonne.estBloque()).thenReturn(true);
+        IRegistre registre = createIRegistreMock(0,0,0);
+        Abonne abonne = createAbonneMock(true);
 
         station.setRegistre(registre);
         assertEquals(0,station.arrimerVelo(new Velo(),3));
@@ -114,19 +123,62 @@ public class StationTest {
 
     @Test
     public void emprunterSansRegistre(){
+        Abonne abonne = createAbonneMock(false);
 
+        assertNull(station.emprunterVelo(abonne,2));
     }
 
     @Test
     public void emprunterTropEmprunts(){
+        IRegistre registre = createIRegistreMock(0,1,0);
+        station.setRegistre(registre);
+
+        Abonne abonne = createAbonneMock(false);
+
+        IVelo velo = createIVeloMock(0);
+
+        assertEquals(0,station.arrimerVelo(velo,2));
+
+        assertNull(station.emprunterVelo(abonne,2));
 
     }
 
     @Test
-    public void arrimerSansRegistre(){
-        Abonne abonne = mock(Abonne.class);
-        when(abonne.estBloque()).thenReturn(false);
+    public void emprunterBorneVide(){
+        IRegistre registre = createIRegistreMock(0,0,0);
+        station.setRegistre(registre);
 
+        Abonne abonne = createAbonneMock(false);
+
+        assertNull(station.emprunterVelo(abonne,2));
+        
+    }
+
+    @Test
+    public void emprunterErreurRegistre(){
+        IRegistre registre  = createIRegistreMock(-1,0,0);
+        station.setRegistre(registre);
+
+        Abonne abonne = createAbonneMock(false);
+
+        station.arrimerVelo(createIVeloMock(0),2);
+
+        assertNull(station.emprunterVelo(abonne,2));
+
+    }
+
+    @Test
+    public void arrimerOk(){
+        IRegistre registre = createIRegistreMock(0,0,0);
+
+        station.setRegistre(registre);
+        assertEquals(0,station.arrimerVelo(new Velo(),3));
+    }
+
+
+
+    @Test
+    public void arrimerSansRegistre(){
         assertEquals(-2,station.arrimerVelo(new Velo(),3));
     }
 
