@@ -1,16 +1,16 @@
 package fr.ufc.l3info.oprog;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import org.omg.CORBA.MARSHAL;
 
 public class Station {
 
     private double latitude;
     private double longitude;
-    private String nom;
-    private int capacite;
+    private final String nom;
+    private final int capacite;
     private IRegistre registre;
-    private IVelo[] velos;
+    private final IVelo[] velos;
 
 
     public Station(String nom, double latitude, double longitude, int capacite) {
@@ -95,6 +95,23 @@ public class Station {
 
         this.velos[b-1] = v;
         return 0;
+    }
+
+    public double distance(Station s){
+        double r = 6371e3;
+        double p1 = this.latitude * Math.PI/180;
+        double p2 = s.latitude * Math.PI/180;
+        double dP = (s.latitude-this.latitude) * Math.PI / 180;
+        double dL = (s.longitude - this.longitude) * Math.PI / 180;
+
+        double a =  Math.sin(dP/2) * Math.sin(dP/2) +
+                    Math.cos(p1) * Math.cos(p2) *
+                    Math.sin(dL/2) * Math.sin(dL/2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        return Math.round(r * c);
+
     }
 
     public long maintenant() {

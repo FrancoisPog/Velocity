@@ -20,8 +20,8 @@ public class StationTest {
 
     final String NOM = "Granvelle";
     final int CAPACITE = 5;
-    final double LATITUDE = 30;
-    final double LONGITUDE = 30;
+    final double LATITUDE = 47.24547025801882;
+    final double LONGITUDE = 5.9879826235144495;
 
     private Station station;
 
@@ -36,36 +36,7 @@ public class StationTest {
         station = new Station(NOM,LATITUDE,LONGITUDE, CAPACITE);
     }
 
-    /****************************************************
-                        TESTS SANS MOCKS
-     ****************************************************/
 
-    @Test
-    public void constructeur(){
-        assertEquals(NOM,station.getNom());
-        assertEquals(CAPACITE,station.capacite());
-        assertEquals(CAPACITE,station.nbBornesLibres());
-    }
-
-    @Test
-    public void constructeurCapaciteNegative(){
-        station = new Station(NOM,LATITUDE,LONGITUDE, -3);
-        assertEquals(NOM,station.getNom());
-        assertEquals(-3,station.capacite());
-        assertEquals(0,station.nbBornesLibres());
-    }
-
-    @Test
-    public void toutesBornesLibres(){
-        for(int i = 0 ; i < CAPACITE ; ++i){
-            assertNull(station.veloALaBorne(i));
-        }
-    }
-
-    @Test
-    public void veloALaBorneMauvaiseBorne(){
-
-    }
 
     /****************************************************
                             MOCKS
@@ -92,10 +63,51 @@ public class StationTest {
     }
 
 
+
     /****************************************************
-                        TESTS AVEC MOCKS
+                            TESTS
      ****************************************************/
 
+    @Test
+    public void constructeur(){
+        assertEquals(NOM,station.getNom());
+        assertEquals(CAPACITE,station.capacite());
+        assertEquals(CAPACITE,station.nbBornesLibres());
+    }
+
+    @Test
+    public void constructeurCapaciteNegative(){
+        station = new Station(NOM,LATITUDE,LONGITUDE, -3);
+        assertEquals(NOM,station.getNom());
+        assertEquals(-3,station.capacite());
+        assertEquals(0,station.nbBornesLibres());
+    }
+
+    @Test
+    public void nbBornesLibres(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+        station.arrimerVelo(createIVeloMock(0),3);
+        assertEquals(CAPACITE-1,station.nbBornesLibres());
+    }
+
+    @Test
+    public void toutesBornesLibres(){
+        for(int i = 0 ; i < CAPACITE ; ++i){
+            assertNull(station.veloALaBorne(i));
+        }
+    }
+
+    @Test
+    public void veloALaBorneMauvaiseBorne(){
+        assertNull(station.veloALaBorne(-1));
+        assertNull(station.veloALaBorne(CAPACITE+1));
+    }
+
+    @Test
+    public void distance(){
+        Station other = new Station("Kyoto",35.011636,135.768029,5);
+        System.out.println(station.distance(other));
+    }
 
 
     @Test
@@ -130,11 +142,9 @@ public class StationTest {
 
     @Test
     public void emprunterTropEmprunts(){
-        IRegistre registre = createIRegistreMock(0,1,0);
-        station.setRegistre(registre);
+        station.setRegistre(createIRegistreMock(0,1,0));
 
         Abonne abonne = createAbonneMock(false);
-
         IVelo velo = createIVeloMock(0);
 
         assertEquals(0,station.arrimerVelo(velo,2));
@@ -169,42 +179,47 @@ public class StationTest {
 
     @Test
     public void arrimerOk(){
-        IRegistre registre = createIRegistreMock(0,0,0);
-
-        station.setRegistre(registre);
-        assertEquals(0,station.arrimerVelo(new Velo(),3));
+        station.setRegistre(createIRegistreMock(0,0,0));
+        assertEquals(0,station.arrimerVelo(createIVeloMock(0),3));
     }
-
-
 
     @Test
     public void arrimerSansRegistre(){
-        assertEquals(-2,station.arrimerVelo(new Velo(),3));
+        assertEquals(-2,station.arrimerVelo(createIVeloMock(0),3));
     }
 
     @Test
     public void arrimerVeloNull(){
-
+        station.setRegistre(createIRegistreMock(0,0,0));
+        assertEquals(-1,station.arrimerVelo(null,3));
     }
 
     @Test
     public void arrimerMauvaiseBorne(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+        assertEquals(-1,station.arrimerVelo(createIVeloMock(0),-4));
+        assertEquals(-1,station.arrimerVelo(createIVeloMock(0),CAPACITE+1));
 
     }
 
     @Test
     public void arrimerBorneNonLibre(){
-
+        station.setRegistre(createIRegistreMock(0,0,0));
+        assertEquals(0,station.arrimerVelo(createIVeloMock(0),2));
+        assertEquals(-2,station.arrimerVelo(createIVeloMock(0),2));
     }
 
     @Test
-    public void arrimerVeloDejaArrime(){
+    public void arrimerVeloErreurVelo(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+        assertEquals(-3,station.arrimerVelo(createIVeloMock(-1),3));
 
     }
 
     @Test
     public void arrimerErreurRegistre(){
-
+        station.setRegistre(createIRegistreMock(0,0,-1));
+        assertEquals(-4,station.arrimerVelo(createIVeloMock(0),2));
     }
 
 
