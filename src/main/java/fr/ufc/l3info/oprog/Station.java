@@ -164,6 +164,7 @@ public class Station {
 
         while(it.hasNext() && nbBornesLibres() > Math.floor(capacite/2.0)) {
             IVelo velo = it.next();
+            System.out.println(velo.estAbime() +" | "+ (velo.prochaineRevision() <= 0) +" | "+ !poserBesoinRevision);
             if(velo.estAbime() || ( !poserBesoinRevision && velo.prochaineRevision() <= 0 ) ){
                 continue;
             }

@@ -246,6 +246,7 @@ public class StationTest {
         station.setRegistre(createIRegistreMock(0,0,0));
         Set<IVelo> nouveaux = new HashSet<>();
 
+        nouveaux.add(createIVeloMock(0,true,500));
         nouveaux.add(createIVeloMock(0,false,500));
         nouveaux.add(createIVeloMock(0,false,0));
         nouveaux.add(createIVeloMock(0,false,500));
@@ -264,6 +265,7 @@ public class StationTest {
         station.setRegistre(createIRegistreMock(0,0,0));
 
         Set<IVelo> nouveaux = new HashSet<>();
+
         nouveaux.add(createIVeloMock(0,true,500));
         nouveaux.add(createIVeloMock(0,true,0));
         nouveaux.add(createIVeloMock(0,true,500));
@@ -322,8 +324,10 @@ public class StationTest {
         station.setRegistre(createIRegistreMock(0,0,0));
 
         Set<IVelo> nouveaux = new HashSet<>();
+
         nouveaux.add(createIVeloMock(0,false,500));
         nouveaux.add(createIVeloMock(0,false,500));
+
 
         station.arrimerVelo(createIVeloMock(0,false,500),1);
         station.arrimerVelo(createIVeloMock(0,false,500),2);
