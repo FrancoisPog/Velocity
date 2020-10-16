@@ -11,6 +11,9 @@ import org.mockito.ArgumentMatchers;
 
 import org.mockito.MockitoAnnotations;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -56,9 +59,11 @@ public class StationTest {
         return abonne;
     }
 
-    public IVelo createIVeloMock(int retArrimer){
+    public IVelo createIVeloMock(int retArrimer, boolean retEstAbime, double retProchaineRevision){
         IVelo velo = mock(Velo.class);
         when(velo.arrimer()).thenReturn(retArrimer);
+        when(velo.estAbime()).thenReturn(retEstAbime);
+        when(velo.prochaineRevision()).thenReturn(retProchaineRevision);
         return velo;
     }
 
@@ -86,7 +91,7 @@ public class StationTest {
     @Test
     public void nbBornesLibres(){
         station.setRegistre(createIRegistreMock(0,0,0));
-        station.arrimerVelo(createIVeloMock(0),3);
+        station.arrimerVelo(createIVeloMock(0,false,500),3);
         assertEquals(CAPACITE-1,station.nbBornesLibres());
     }
 
@@ -145,7 +150,7 @@ public class StationTest {
         station.setRegistre(createIRegistreMock(0,1,0));
 
         Abonne abonne = createAbonneMock(false);
-        IVelo velo = createIVeloMock(0);
+        IVelo velo = createIVeloMock(0,false,500);
 
         assertEquals(0,station.arrimerVelo(velo,2));
 
@@ -171,7 +176,7 @@ public class StationTest {
 
         Abonne abonne = createAbonneMock(false);
 
-        station.arrimerVelo(createIVeloMock(0),2);
+        station.arrimerVelo(createIVeloMock(0,false,500),2);
 
         assertNull(station.emprunterVelo(abonne,2));
 
@@ -180,12 +185,12 @@ public class StationTest {
     @Test
     public void arrimerOk(){
         station.setRegistre(createIRegistreMock(0,0,0));
-        assertEquals(0,station.arrimerVelo(createIVeloMock(0),3));
+        assertEquals(0,station.arrimerVelo(createIVeloMock(0,false,500),3));
     }
 
     @Test
     public void arrimerSansRegistre(){
-        assertEquals(-2,station.arrimerVelo(createIVeloMock(0),3));
+        assertEquals(-2,station.arrimerVelo(createIVeloMock(0,false,500),3));
     }
 
     @Test
@@ -197,31 +202,155 @@ public class StationTest {
     @Test
     public void arrimerMauvaiseBorne(){
         station.setRegistre(createIRegistreMock(0,0,0));
-        assertEquals(-1,station.arrimerVelo(createIVeloMock(0),-4));
-        assertEquals(-1,station.arrimerVelo(createIVeloMock(0),CAPACITE+1));
+        assertEquals(-1,station.arrimerVelo(createIVeloMock(0,false,500),-4));
+        assertEquals(-1,station.arrimerVelo(createIVeloMock(0,false,500),CAPACITE+1));
 
     }
 
     @Test
     public void arrimerBorneNonLibre(){
         station.setRegistre(createIRegistreMock(0,0,0));
-        assertEquals(0,station.arrimerVelo(createIVeloMock(0),2));
-        assertEquals(-2,station.arrimerVelo(createIVeloMock(0),2));
+        assertEquals(0,station.arrimerVelo(createIVeloMock(0,false,500),2));
+        assertEquals(-2,station.arrimerVelo(createIVeloMock(0,false,500),2));
     }
 
     @Test
     public void arrimerVeloErreurVelo(){
         station.setRegistre(createIRegistreMock(0,0,0));
-        assertEquals(-3,station.arrimerVelo(createIVeloMock(-1),3));
+        assertEquals(-3,station.arrimerVelo(createIVeloMock(-1,false,500),3));
 
     }
 
     @Test
     public void arrimerErreurRegistre(){
         station.setRegistre(createIRegistreMock(0,0,-1));
-        assertEquals(-4,station.arrimerVelo(createIVeloMock(0),2));
+        assertEquals(-4,station.arrimerVelo(createIVeloMock(0,false,500),2));
     }
 
+
+    @Test
+    public void equilibrerRempliDeBonEtat(){
+        Set<IVelo> nouveaux = new HashSet<>();
+        nouveaux.add(createIVeloMock(0,false,500));
+        nouveaux.add(createIVeloMock(0,false,500));
+        nouveaux.add(createIVeloMock(0,false,500));
+        nouveaux.add(createIVeloMock(0,false,500));
+        nouveaux.add(createIVeloMock(0,false,500));
+
+        station.equilibrer(nouveaux);
+        assertEquals(2,station.nbBornesLibres());
+    }
+
+    @Test
+    public void equilibrerRempliAvecRevisionNecessaire(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+        Set<IVelo> nouveaux = new HashSet<>();
+
+        nouveaux.add(createIVeloMock(0,false,500));
+        nouveaux.add(createIVeloMock(0,false,0));
+        nouveaux.add(createIVeloMock(0,false,500));
+        nouveaux.add(createIVeloMock(0,false,0));
+
+        station.arrimerVelo(createIVeloMock(0,true,0),3);
+        station.arrimerVelo(createIVeloMock(0,false,0),2);
+        station.arrimerVelo(createIVeloMock(0,false,500),4);
+
+        station.equilibrer(nouveaux);
+        assertEquals(2,station.nbBornesLibres());
+    }
+
+    @Test
+    public void equilibrerPasDeVeloDispo(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+
+        Set<IVelo> nouveaux = new HashSet<>();
+        nouveaux.add(createIVeloMock(0,true,500));
+        nouveaux.add(createIVeloMock(0,true,0));
+        nouveaux.add(createIVeloMock(0,true,500));
+        nouveaux.add(createIVeloMock(0,true,0));
+
+        station.arrimerVelo(createIVeloMock(0,true,0),4);
+        station.arrimerVelo(createIVeloMock(0,true,0),3);
+        station.arrimerVelo(createIVeloMock(0,false,500),2);
+
+
+        station.equilibrer(nouveaux);
+        assertEquals(4,station.nbBornesLibres());
+
+    }
+    @Test
+    public void equilibrerTropDeVelo(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+
+        Set<IVelo> nouveaux = new HashSet<>();
+        nouveaux.add(createIVeloMock(0,true,500));
+        nouveaux.add(createIVeloMock(0,true,0));
+
+        station.arrimerVelo(createIVeloMock(0,false,500),1);
+        station.arrimerVelo(createIVeloMock(0,false,500),2);
+        station.arrimerVelo(createIVeloMock(0,false,500),3);
+        station.arrimerVelo(createIVeloMock(0,false,500),4);
+        station.arrimerVelo(createIVeloMock(0,false,500),5);
+
+
+        station.equilibrer(nouveaux);
+        assertEquals(2,station.nbBornesLibres());
+
+    }
+    @Test
+    public void equilibrerTropDeVelos(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+
+        Set<IVelo> nouveaux = new HashSet<>();
+        nouveaux.add(createIVeloMock(0,true,500));
+        nouveaux.add(createIVeloMock(0,true,0));
+
+
+        station.arrimerVelo(createIVeloMock(0,false,500),1);
+        station.arrimerVelo(createIVeloMock(0,false,500),2);
+        station.arrimerVelo(createIVeloMock(0,false,500),3);
+        station.arrimerVelo(createIVeloMock(0,false,500),4);
+        station.arrimerVelo(createIVeloMock(0,false,500),5);
+
+
+        station.equilibrer(nouveaux);
+        assertEquals(2,station.nbBornesLibres());
+    }
+
+    @Test
+    public void equilibrerJusteEnleverMauvaisEtat(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+
+        Set<IVelo> nouveaux = new HashSet<>();
+        nouveaux.add(createIVeloMock(0,false,500));
+        nouveaux.add(createIVeloMock(0,false,500));
+
+        station.arrimerVelo(createIVeloMock(0,false,500),1);
+        station.arrimerVelo(createIVeloMock(0,false,500),2);
+        station.arrimerVelo(createIVeloMock(0,false,500),3);
+        station.arrimerVelo(createIVeloMock(0,true,500),4);
+        station.arrimerVelo(createIVeloMock(0,true,500),5);
+
+        station.equilibrer(nouveaux);
+        assertEquals(2,station.nbBornesLibres());
+    }
+
+    @Test
+    public void equilibrerTropDeVelosBis(){
+        station.setRegistre(createIRegistreMock(0,0,0));
+
+        Set<IVelo> nouveaux = new HashSet<>();
+        nouveaux.add(createIVeloMock(0,false,0));
+        nouveaux.add(createIVeloMock(0,false,500));
+
+        station.arrimerVelo(createIVeloMock(0,false,500),4);
+        station.arrimerVelo(createIVeloMock(0,false,500),2);
+        station.arrimerVelo(createIVeloMock(0,false,500),3);
+        station.arrimerVelo(createIVeloMock(0,false,500),5);
+
+        station.equilibrer(nouveaux);
+        assertEquals(2,station.nbBornesLibres());
+    }
 
 
 

@@ -2,11 +2,15 @@ package fr.ufc.l3info.oprog;
 
 
 import org.omg.CORBA.MARSHAL;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
+import java.util.Iterator;
+import java.util.Set;
 
 public class Station {
 
-    private double latitude;
-    private double longitude;
+    private final double latitude;
+    private final double longitude;
     private final String nom;
     private final int capacite;
     private IRegistre registre;
@@ -113,6 +117,69 @@ public class Station {
         return Math.round(r * c);
 
     }
+
+    public void equilibrer(Set<IVelo> velos){
+
+        for(int i = 0 ; i < this.capacite ; ++i){
+
+            if(this.velos[i] != null && ( this.velos[i].estAbime() || this.velos[i].prochaineRevision() <= 0 )){
+                velos.add(this.velos[i]);
+                this.velos[i].decrocher();
+                this.velos[i] = null;
+            }
+        }
+
+        if(nbBornesLibres() <= Math.floor(capacite/2.0)){
+            if(nbBornesLibres() == Math.floor(capacite/2.0)){
+                return;
+            }else{
+
+                int i = 0;
+                while( nbBornesLibres() < Math.floor(capacite/2.0)){
+
+                    if(this.velos[i] == null){
+                        i++;
+                        continue;
+                    }
+                    velos.add(this.velos[i]);
+                    this.velos[i].decrocher();
+                    this.velos[i] = null;
+                    i++;
+                }
+            }
+        }
+
+        deposerVelos(velos,false);
+
+        if(nbBornesLibres() <= Math.floor(capacite/2.0)){
+            return;
+        }
+
+        deposerVelos(velos,true);
+
+    }
+
+    private void deposerVelos(Set<IVelo> nouveaux, boolean poserBesoinRevision){
+        Iterator<IVelo> it = nouveaux.iterator();
+
+        while(it.hasNext() && nbBornesLibres() > Math.floor(capacite/2.0)) {
+            IVelo velo = it.next();
+            if(velo.estAbime() || ( !poserBesoinRevision && velo.prochaineRevision() <= 0 ) ){
+                continue;
+            }
+            int i = 0 ;
+            while(this.velos[i] != null){i++;};
+
+            this.velos[i] = velo;
+            this.velos[i].arrimer();
+        }
+
+        for(int i = 0 ; i < this.capacite ; ++i){
+            nouveaux.remove(this.velos[i]);
+        }
+    }
+
+
 
     public long maintenant() {
         return System.currentTimeMillis();
