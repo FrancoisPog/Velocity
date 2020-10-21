@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class VeloTest {
 
@@ -41,21 +41,21 @@ public class VeloTest {
     @Test
     public void EtatArrimerAbimerDecrocher(){
         assertEquals(0,velo.arrimer());
-        Assert.assertFalse(velo.estAbime());
+        assertFalse(velo.estAbime());
         velo.abimer();
-        Assert.assertTrue(velo.estAbime());
+        assertTrue(velo.estAbime());
         assertEquals(0,velo.decrocher());
-        Assert.assertTrue(velo.estAbime());
+        assertTrue(velo.estAbime());
     }
 
     @Test
     public void EtatAbimerReparer(){
-        Assert.assertFalse(velo.estAbime());
+        assertFalse(velo.estAbime());
         assertEquals(-2,velo.reparer());
         velo.abimer();
-        Assert.assertTrue(velo.estAbime());
+        assertTrue(velo.estAbime());
         assertEquals(0,velo.reparer());
-        Assert.assertFalse(velo.estAbime());
+        assertFalse(velo.estAbime());
     }
 
 
@@ -64,7 +64,7 @@ public class VeloTest {
         velo.abimer();
         assertEquals(0,velo.arrimer());
         assertEquals(-1,velo.reparer());
-        Assert.assertTrue(velo.estAbime());
+        assertTrue(velo.estAbime());
     }
 
     @Test
@@ -100,8 +100,19 @@ public class VeloTest {
 
     @Test
     public void AccrocherReviser(){
-        velo.arrimer();
+        velo.parcourir(104);
+        assertEquals(0,velo.arrimer());
         assertEquals(-1,velo.reviser());
+        assertEquals(500-104,velo.prochaineRevision(), 1e-3);
+
+    }
+
+    @Test
+    public void abimerAccrocherReviser(){
+        velo.abimer();
+        assertEquals(0,velo.arrimer());
+        assertEquals(-1,velo.reviser());
+        assertTrue(velo.estAbime());
     }
 
     @Test
@@ -110,7 +121,7 @@ public class VeloTest {
         assertEquals(300,velo.prochaineRevision(),1e-3);
         velo.parcourir(400);
         assertEquals(600,velo.kilometrage(),1e-3);
-        Assert.assertTrue(velo.prochaineRevision() <= 0);
+        assertTrue(velo.prochaineRevision() <= 0);
     }
 
     @Test
@@ -125,11 +136,13 @@ public class VeloTest {
     @Test
     public void ToStringHomme(){
         assertEquals("Vélo cadre homme - 0.0 km",new Velo('H').toString());
+        assertEquals("Vélo cadre homme - 0.0 km",new Velo('h').toString());
     }
 
     @Test
     public void ToStringFemme(){
         assertEquals("Vélo cadre femme - 0.0 km",new Velo('F').toString());
+        assertEquals("Vélo cadre femme - 0.0 km",new Velo('f').toString());
     }
 
 
