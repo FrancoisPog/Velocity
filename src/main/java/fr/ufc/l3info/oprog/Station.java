@@ -120,8 +120,8 @@ public class Station {
 
     public void equilibrer(Set<IVelo> velos){
 
+        // Recupération des velos abimés ou qui ont besoin de révision
         for(int i = 0 ; i < this.capacite ; ++i){
-
             if(this.velos[i] != null && ( this.velos[i].estAbime() || this.velos[i].prochaineRevision() <= 0 )){
                 velos.add(this.velos[i]);
                 this.velos[i].decrocher();
@@ -130,10 +130,11 @@ public class Station {
         }
 
         if(nbBornesLibres() <= Math.floor(capacite/2.0)){
+            // Si on a le bon nombre de vélos en bon état, on est bon
             if(nbBornesLibres() == Math.floor(capacite/2.0)){
                 return;
             }else{
-
+                // Si il reste trop de vélos on en récupère
                 int i = 0;
                 while( nbBornesLibres() < Math.floor(capacite/2.0)){
 
@@ -149,12 +150,14 @@ public class Station {
             }
         }
 
+        // Si on n'a pas assez de vélos, on pose des vélos en bon état
         deposerVelos(velos,false);
 
         if(nbBornesLibres() <= Math.floor(capacite/2.0)){
             return;
         }
 
+        // Si on a toujours pas assez de vélo, on pose des vélo qui ont besoin d'etre révisé
         deposerVelos(velos,true);
 
     }
