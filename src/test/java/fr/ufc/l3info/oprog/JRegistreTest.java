@@ -139,6 +139,14 @@ public class JRegistreTest {
     }
 
     @Test
+    public void nbEmpruntFutur(){
+        assertEquals(0,registre.emprunter(abonne,velo,maintenantMoinsNMin(-10)));
+        assertEquals(1,registre.nbEmpruntsEnCours(abonne));
+        assertEquals(0,registre.retourner(velo,maintenantMoinsNMin(-12)));
+        assertEquals(0,registre.nbEmpruntsEnCours(abonne));
+    }
+
+    @Test
     public void facturationUnEmprunt(){
         assertEquals(0,registre.emprunter(abonne,velo,maintenantMoinsNMin(180)));
         assertEquals(0,registre.retourner(velo,maintenantMoinsNMin(60)));
