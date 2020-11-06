@@ -3,9 +3,7 @@ package fr.ufc.l3info.oprog;
 
 import org.junit.Before;
 import org.junit.Test;
-
-
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,12 +19,6 @@ public class StationIntegrationTest {
     final double LONGITUDE = 5.9879826235144495;
 
     private Station station;
-
-
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Before
     public void initStation() {
@@ -75,7 +67,7 @@ public class StationIntegrationTest {
             nbOk++;
         }
 
-        System.out.println("Station : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
+        //System.out.println("Station : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
         assertEquals("nbAbime",abime,nbAbime);
         assertEquals("nbRevision",revision,nbRevision);
         assertEquals("nbOk",ok,nbOk);
@@ -101,7 +93,7 @@ public class StationIntegrationTest {
             nbOk++;
         }
 
-        System.out.println("Set : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
+        //System.out.println("Set : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
         assertEquals("nbAbime",abime,nbAbime);
         assertEquals("nbRevision",revision,nbRevision);
         assertEquals("nbOk",ok,nbOk);
@@ -150,9 +142,8 @@ public class StationIntegrationTest {
     @Test
     public void distance() {
         Station other = new Station("Kyoto", 35.011636, 135.768029, 5);
-        System.out.println(station.distance(other));
+        assertEquals(9589796,station.distance(other),10);
     }
-
 
     @Test
     public void emprunterOk() throws IncorrectNameException {
@@ -162,7 +153,9 @@ public class StationIntegrationTest {
         station.setRegistre(registre);
         assertEquals(-4, station.arrimerVelo(createIVelo(0, false, 500), 3));
 
-        assertNotNull(station.emprunterVelo(abonne, 3));
+        IVelo velo = station.emprunterVelo(abonne, 3);
+        assertNotNull(velo);
+        assertEquals(-1,velo.decrocher());
         assertNull(station.emprunterVelo(abonne, 3));
     }
 
@@ -229,9 +222,36 @@ public class StationIntegrationTest {
     }
 
     @Test
+    public void arrimerOk() throws IncorrectNameException {
+        station.setRegistre(new JRegistre());
+        IVelo velo = createIVelo(0, false, 500);
+        assertEquals(-4, station.arrimerVelo(velo, 3));
+        assertEquals(-1,velo.arrimer());
+        assertEquals(velo,station.emprunterVelo(createAbonne(false),3));
+        assertEquals(-1,velo.decrocher());
+        assertEquals(0,station.arrimerVelo(velo,3));
+        assertEquals(-1,velo.arrimer());
+    }
+
+    @Test
     public void arrimerSansEmprunt() {
         station.setRegistre(new JRegistre());
         assertEquals(-4, station.arrimerVelo(createIVelo(0, false, 500), 3));
+    }
+
+    @Test
+    public void arrimerAvantEmprunt() throws IncorrectNameException {
+        Station s = Mockito.spy(station);
+
+        s.setRegistre(new JRegistre());
+        Abonne a = createAbonne(false);
+        IVelo velo = createIVelo(0,false,300);
+        assertEquals(-4,s.arrimerVelo(velo,3));
+        assertNotNull(s.emprunterVelo(a,3));
+
+        Mockito.when(s.maintenant()).thenReturn(System.currentTimeMillis() - 1000 * 60 * 5);
+
+        assertEquals(-4,s.arrimerVelo(velo,4));
     }
 
     @Test
@@ -548,6 +568,37 @@ public class StationIntegrationTest {
         // station : 2 + r(1)
         assertCompoStation(0,1,2);
         assertCompoSet(nouveaux,1,2,0);
+    }
+
+    @Test
+    public void equilibrerTer(){
+        station.setRegistre(new JRegistre());
+
+        Set<IVelo> nouveaux = new HashSet<>();
+        // set : 3 + r(3) + a(3)
+        // station : 1 + r(1)
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, true, 500));
+        nouveaux.add(createIVelo(0, true, 500));
+        nouveaux.add(createIVelo(0, true, 500));
+        nouveaux.add(createIVelo(0, false, 0));
+        nouveaux.add(createIVelo(0, false, 0));
+        nouveaux.add(createIVelo(0, false, 0));
+
+        station.arrimerVelo(createIVelo(0, false, 0), 2);
+        station.arrimerVelo(createIVelo(0, false, 40), 3);
+
+
+
+        station.equilibrer(nouveaux);
+        assertEquals(2, station.nbBornesLibres());
+        assertEquals(8, nouveaux.size());
+        // set : 1 + r(4) + a(3)
+        // station : 3
+        assertCompoStation(0,0,3);
+        assertCompoSet(nouveaux,3,4,1);
     }
 
 

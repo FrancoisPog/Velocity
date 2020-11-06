@@ -73,6 +73,7 @@ public class Station {
         IVelo v = veloALaBorne(b);
         if (v != null) {
             this.velos[b - 1] = null;
+            v.decrocher();
         }
         return v;
     }
