@@ -99,12 +99,6 @@ public class OptionTest {
         assertEquals(5.5,veloBase.tarif(),1e-3);
     }
 
-    @Test
-    public void veloNull(){
-        IVelo velo = new OptAssistanceElectrique(null);
-        assertEquals("Vélo cadre mixte, assistance électrique - 0.0 km",velo.toString());
-    }
-
 
 
 }
