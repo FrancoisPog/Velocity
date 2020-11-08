@@ -193,7 +193,9 @@ public class Station {
     }
 
     /**
-     * Retire les vélos ayant besoin de révision, en s'assurant d'avoir assez de vélos en bon état dispo pour les remplacer et avoir le bon nombre de vélos à la fin
+     * Retire les vélos ayant besoin de révision,
+     * en s'assurant d'avoir assez de vélos en bon état dispo pour les remplacer et
+     * avoir le bon nombre de vélos à la fin
      *
      * @param nouveaux L'ensemble de vélos dispo
      */
@@ -230,7 +232,7 @@ public class Station {
                 velos[i] = null;
                 nbVelosAEnlever--;
             }
-            if (nbVelosBonEtat == 0) {
+            if (nbVelosAEnlever == 0) {
                 break;
             }
         }

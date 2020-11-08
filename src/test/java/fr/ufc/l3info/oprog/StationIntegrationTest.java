@@ -83,7 +83,7 @@ public class StationIntegrationTest {
             nbOk++;
         }
 
-        System.out.println("Station : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
+        //System.out.println("Station : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
         assertEquals("nbAbime",abime,nbAbime);
         assertEquals("nbRevision",revision,nbRevision);
         assertEquals("nbOk",ok,nbOk);
@@ -109,7 +109,8 @@ public class StationIntegrationTest {
             nbOk++;
         }
 
-        System.out.println("Set : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
+        //System.out.println("Set : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
+
         assertEquals("nbAbime",abime,nbAbime);
         assertEquals("nbRevision",revision,nbRevision);
         assertEquals("nbOk",ok,nbOk);
@@ -655,8 +656,12 @@ public class StationIntegrationTest {
         grosseStation.setRegistre(new JRegistre());
 
         Set<IVelo> nouveaux = new HashSet<>();
-        // set : 4 + r(5) + a(3)
+        // set : 8 + r(5) + a(3)
         // station : 6 + r(4) + a(10)
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
         nouveaux.add(createIVelo(0, false, 500));
         nouveaux.add(createIVelo(0, false, 500));
         nouveaux.add(createIVelo(0, false, 500));
@@ -694,16 +699,16 @@ public class StationIntegrationTest {
         grosseStation.arrimerVelo(createIVelo(0, true, 40), 19);
 
         assertCompoStation(10,4,6,grosseStation);
-        assertCompoSet(nouveaux,3,5,4);
+        assertCompoSet(nouveaux,3,5,8);
 
         grosseStation.equilibrer(nouveaux);
 
-        assertEquals(16, grosseStation.nbBornesLibres());
-        assertEquals(18, nouveaux.size());
-        // set : 0 + r(5) + a(13)
-        // station : 10 + r(4)
-        assertCompoStation(0,4,10,grosseStation);
-        assertCompoSet(nouveaux,13,5,0);
+        assertEquals(15, grosseStation.nbBornesLibres());
+        assertEquals(21, nouveaux.size());
+        // set : 0 + r(8) + a(13)
+        // station : 14 + r(1)
+        assertCompoStation(0,1,14,grosseStation);
+        assertCompoSet(nouveaux,13,8,0);
 
     }
 
