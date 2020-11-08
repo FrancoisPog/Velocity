@@ -27,7 +27,7 @@ public class Station {
             return;
         }
 
-        this.velos = new Velo[this.capacite];
+        this.velos = new IVelo[this.capacite];
         for (int i = 0; i < this.capacite; ++i) {
             velos[i] = null;
         }
@@ -63,8 +63,7 @@ public class Station {
     }
 
     public IVelo emprunterVelo(Abonne a, int b) {
-
-        if (a.estBloque() || this.registre == null || this.registre.nbEmpruntsEnCours(a) != 0) {
+        if (a == null || a.estBloque() || b <= 0 || b > this.capacite || this.registre == null || this.registre.nbEmpruntsEnCours(a) != 0) {
             return null;
         }
         if (this.registre.emprunter(a, this.velos[b - 1], maintenant()) != 0) {
@@ -101,6 +100,9 @@ public class Station {
     }
 
     public double distance(Station s) {
+        if(s == null){
+            return 0;
+        }
         double r = 6371e3;
         double p1 = this.latitude * Math.PI / 180;
         double p2 = s.latitude * Math.PI / 180;
@@ -113,11 +115,14 @@ public class Station {
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        return Math.round(r * c);
+        return Math.round(r * c) / 1000.0;
 
     }
 
     public void equilibrer(Set<IVelo> velos) {
+        if(velos == null){
+            return;
+        }
 
         // Remplacement des vélos abimés
         remplacerAbime(velos);

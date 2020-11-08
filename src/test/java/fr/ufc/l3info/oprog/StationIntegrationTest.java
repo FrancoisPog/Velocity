@@ -13,16 +13,29 @@ import static org.junit.Assert.*;
 
 public class StationIntegrationTest {
 
-    final String NOM = "Granvelle";
+    final String NOM = "317C";
     final int CAPACITE = 5;
     final double LATITUDE = 47.24547025801882;
     final double LONGITUDE = 5.9879826235144495;
+    final private String[] options = {
+            "CADRE_ALUMINIUM",
+            "SUSPENSION_AVANT",
+            "SUSPENSION_ARRIERE",
+            "FREINS_DISQUE",
+            "ASSISTANCE_ELECTRIQUE"
+    };
+    private FabriqueVelo fabrique;
 
     private Station station;
 
     @Before
     public void initStation() {
         station = new Station(NOM, LATITUDE, LONGITUDE, CAPACITE);
+    }
+
+    @Before
+    public void initFabrique(){
+        fabrique = FabriqueVelo.getInstance();
     }
 
 
@@ -35,7 +48,7 @@ public class StationIntegrationTest {
     }
 
     public IVelo createIVelo(int retArrimer, boolean retEstAbime, double retProchaineRevision) {
-        IVelo velo = new Velo('h');
+        IVelo velo = fabrique.construire('f',options[(int)(Math.random()*options.length)]);
         if (retArrimer == -1) {
             velo.arrimer();
         }
@@ -142,7 +155,12 @@ public class StationIntegrationTest {
     @Test
     public void distance() {
         Station other = new Station("Kyoto", 35.011636, 135.768029, 5);
-        assertEquals(9589796,station.distance(other),10);
+        assertEquals(9589.796,station.distance(other),10);
+    }
+
+    @Test
+    public void distanceNull(){
+        assertEquals(0,station.distance(null),0);
     }
 
     @Test
@@ -222,6 +240,22 @@ public class StationIntegrationTest {
     }
 
     @Test
+    public void emprunterBorneTropPetite() throws IncorrectNameException {
+        station.setRegistre(new JRegistre());
+
+        assertNull(station.emprunterVelo(createAbonne(false),0));
+        assertNull(station.emprunterVelo(createAbonne(false),-4));
+    }
+
+    @Test
+    public void emprunterBorneTropGrande() throws IncorrectNameException {
+        station.setRegistre(new JRegistre());
+
+        assertNull(station.emprunterVelo(createAbonne(false),CAPACITE));
+        assertNull(station.emprunterVelo(createAbonne(false),CAPACITE + 10));
+    }
+
+    @Test
     public void arrimerOk() throws IncorrectNameException {
         station.setRegistre(new JRegistre());
         IVelo velo = createIVelo(0, false, 500);
@@ -270,6 +304,7 @@ public class StationIntegrationTest {
         station.setRegistre(new JRegistre());
         assertEquals(-1, station.arrimerVelo(createIVelo(0, false, 500), -4));
         assertEquals(-1, station.arrimerVelo(createIVelo(0, false, 500), CAPACITE + 1));
+        assertEquals(-1, station.arrimerVelo(createIVelo(0, false, 500), 0));
 
     }
 

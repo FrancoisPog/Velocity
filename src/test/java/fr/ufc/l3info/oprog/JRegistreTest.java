@@ -9,9 +9,17 @@ import static org.junit.Assert.assertTrue;
 
 public class JRegistreTest {
 
+    private FabriqueVelo fabrique;
     private IRegistre registre;
     private Abonne abonne;
     private IVelo velo;
+    final private String[] options = {
+            "CADRE_ALUMINIUM",
+            "SUSPENSION_AVANT",
+            "SUSPENSION_ARRIERE",
+            "FREINS_DISQUE",
+            "ASSISTANCE_ELECTRIQUE"
+    };
 
     public long maintenantMoinsNMin(long min){
         return System.currentTimeMillis() - 1000*60*min;
@@ -29,7 +37,8 @@ public class JRegistreTest {
 
     @Before
     public void initVelo(){
-        velo = new Velo('m');
+        fabrique = FabriqueVelo.getInstance();
+        velo = fabrique.construire('m',options[(int)(Math.random()*options.length)]);
     }
 
     @Test
@@ -151,7 +160,7 @@ public class JRegistreTest {
         assertEquals(0,registre.emprunter(abonne,velo,maintenantMoinsNMin(180)));
         assertEquals(0,registre.retourner(velo,maintenantMoinsNMin(60)));
 
-        assertEquals(4.0,registre.facturation(abonne,maintenantMoinsNMin(200),maintenantMoinsNMin(0)),1e-3);
+        assertEquals(2 * velo.tarif(),registre.facturation(abonne,maintenantMoinsNMin(200),maintenantMoinsNMin(0)),1e-3);
         assertEquals(0,registre.facturation(abonne,maintenantMoinsNMin(200),maintenantMoinsNMin(70)),1e-3);
     }
 
@@ -174,9 +183,9 @@ public class JRegistreTest {
         assertEquals(0,registre.emprunter(abonne,velo,maintenantMoinsNMin(250)));
         assertEquals(0,registre.retourner(velo,maintenantMoinsNMin(235)));
 
-        assertEquals(5.5,registre.facturation(abonne,maintenantMoinsNMin(500),maintenantMoinsNMin(0)),1e-3);
-        assertEquals(0.5,registre.facturation(abonne,maintenantMoinsNMin(300),maintenantMoinsNMin(200)),1e-3);
-        assertEquals(5,registre.facturation(abonne,maintenantMoinsNMin(100),maintenantMoinsNMin(0)),1e-3);
+        assertEquals(2.75 * velo.tarif(),registre.facturation(abonne,maintenantMoinsNMin(500),maintenantMoinsNMin(0)),1e-3);
+        assertEquals(0.25 * velo.tarif(),registre.facturation(abonne,maintenantMoinsNMin(300),maintenantMoinsNMin(200)),1e-3);
+        assertEquals(2.5 * velo.tarif(),registre.facturation(abonne,maintenantMoinsNMin(100),maintenantMoinsNMin(0)),1e-3);
         assertEquals(0,registre.facturation(abonne,maintenantMoinsNMin(-10),maintenantMoinsNMin(-100)),1e-3);
     }
 
@@ -185,7 +194,7 @@ public class JRegistreTest {
         assertEquals(0,registre.emprunter(abonne,velo,maintenantMoinsNMin(180)));
         assertEquals(0,registre.retourner(velo,maintenantMoinsNMin(114)));
 
-        assertEquals(2.2,registre.facturation(abonne,maintenantMoinsNMin(180),maintenantMoinsNMin(114)),1e-3);
+        assertEquals(1.1 * velo.tarif(),registre.facturation(abonne,maintenantMoinsNMin(180),maintenantMoinsNMin(114)),1e-3);
     }
 
     @Test
@@ -201,8 +210,8 @@ public class JRegistreTest {
         assertEquals(0,registre.emprunter(abonne,troisieme,maintenantMoinsNMin(170)));
         assertEquals(0,registre.retourner(troisieme,maintenantMoinsNMin(30)));
 
-        assertEquals(11.33,registre.facturation(abonne,maintenantMoinsNMin(180),maintenantMoinsNMin(0)),1e-2);
-        assertEquals(6.67,registre.facturation(abonne,maintenantMoinsNMin(160),maintenantMoinsNMin(40)),1e-2);
+        assertEquals(2 * velo.tarif() + 1.333 * deuxieme.tarif() + 2.333 * troisieme.tarif(),registre.facturation(abonne,maintenantMoinsNMin(180),maintenantMoinsNMin(0)),1e-2);
+        assertEquals(2 * velo.tarif() + 1.333 * deuxieme.tarif(),registre.facturation(abonne,maintenantMoinsNMin(160),maintenantMoinsNMin(40)),1e-2);
 
     }
 
