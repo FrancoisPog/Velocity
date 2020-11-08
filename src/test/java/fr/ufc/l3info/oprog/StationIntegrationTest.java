@@ -59,7 +59,10 @@ public class StationIntegrationTest {
         return velo;
     }
 
-    private void assertCompoStation(int abime, int revision, int ok){
+    private void assertCompoStation(int abime, int revision, int ok,Station ...stations){
+        if(stations.length != 0){
+            station = stations[0];
+        }
         int nbAbime = 0, nbRevision = 0, nbOk = 0;
         for(int i = 0 ; i < station.capacite() ; ++i){
             IVelo velo = station.veloALaBorne(i+1);
@@ -80,7 +83,7 @@ public class StationIntegrationTest {
             nbOk++;
         }
 
-        //System.out.println("Station : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
+        System.out.println("Station : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
         assertEquals("nbAbime",abime,nbAbime);
         assertEquals("nbRevision",revision,nbRevision);
         assertEquals("nbOk",ok,nbOk);
@@ -106,7 +109,7 @@ public class StationIntegrationTest {
             nbOk++;
         }
 
-        //System.out.println("Set : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
+        System.out.println("Set : "+nbOk+" + a("+nbAbime+") + r("+nbRevision+")");
         assertEquals("nbAbime",abime,nbAbime);
         assertEquals("nbRevision",revision,nbRevision);
         assertEquals("nbOk",ok,nbOk);
@@ -644,6 +647,64 @@ public class StationIntegrationTest {
         // station : 3
         assertCompoStation(0,0,3);
         assertCompoSet(nouveaux,3,4,1);
+    }
+
+    @Test
+    public void equilibrerGrosseStation(){
+        Station grosseStation = new Station("Paris",10,10,30);
+        grosseStation.setRegistre(new JRegistre());
+
+        Set<IVelo> nouveaux = new HashSet<>();
+        // set : 4 + r(5) + a(3)
+        // station : 6 + r(4) + a(10)
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, false, 500));
+        nouveaux.add(createIVelo(0, true, 500));
+        nouveaux.add(createIVelo(0, true, 500));
+        nouveaux.add(createIVelo(0, true, 500));
+        nouveaux.add(createIVelo(0, false, 0));
+        nouveaux.add(createIVelo(0, false, 0));
+        nouveaux.add(createIVelo(0, false, 0));
+        nouveaux.add(createIVelo(0, false, 0));
+        nouveaux.add(createIVelo(0, false, 0));
+
+        grosseStation.arrimerVelo(createIVelo(0, false, 500), 1);
+        grosseStation.arrimerVelo(createIVelo(0, false, 500), 4);
+        grosseStation.arrimerVelo(createIVelo(0, false, 500), 5);
+        grosseStation.arrimerVelo(createIVelo(0, false, 500), 6);
+        grosseStation.arrimerVelo(createIVelo(0, false, 500), 7);
+        grosseStation.arrimerVelo(createIVelo(0, false, 500), 8);
+
+        grosseStation.arrimerVelo(createIVelo(0, false, 0), 2);
+        grosseStation.arrimerVelo(createIVelo(0, false, 0), 3);
+        grosseStation.arrimerVelo(createIVelo(0, false, 0), 9);
+        grosseStation.arrimerVelo(createIVelo(0, false, 0), 10);
+
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 20);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 11);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 12);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 13);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 14);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 15);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 16);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 17);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 18);
+        grosseStation.arrimerVelo(createIVelo(0, true, 40), 19);
+
+        assertCompoStation(10,4,6,grosseStation);
+        assertCompoSet(nouveaux,3,5,4);
+
+        grosseStation.equilibrer(nouveaux);
+
+        assertEquals(16, grosseStation.nbBornesLibres());
+        assertEquals(18, nouveaux.size());
+        // set : 0 + r(5) + a(13)
+        // station : 10 + r(4)
+        assertCompoStation(0,4,10,grosseStation);
+        assertCompoSet(nouveaux,13,5,0);
+
     }
 
     @Test
