@@ -189,6 +189,16 @@ public class StationIntegrationTest {
     }
 
     @Test
+    public void emprunterAbonneNull(){
+        station.setRegistre(new JRegistre());
+
+        assertEquals(-4, station.arrimerVelo(createIVelo(0, false, 500), 3));
+
+        assertNull(station.emprunterVelo(null, 3));
+
+    }
+
+    @Test
     public void emprunterSansRegistre() throws IncorrectNameException {
         Abonne abonne = createAbonne(false);
 
@@ -634,6 +644,18 @@ public class StationIntegrationTest {
         // station : 3
         assertCompoStation(0,0,3);
         assertCompoSet(nouveaux,3,4,1);
+    }
+
+    @Test
+    public void equilibrerSetNull(){
+        station.setRegistre(new JRegistre());
+
+        station.arrimerVelo(createIVelo(0, false, 0), 2);
+        station.arrimerVelo(createIVelo(0, false, 40), 3);
+
+        station.equilibrer(null);
+
+        assertCompoStation(0,1,1);
     }
 
 
