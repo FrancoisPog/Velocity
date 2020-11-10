@@ -16,14 +16,14 @@ import static org.junit.Assert.assertTrue;
 public class ParserTest {
 
     /** Chemin vers les fichiers de test */
-    final String path = "./target/classes/data/";
+    final String path = "./target/classes/data/parserError/";
 
     /** Instance singleton du parser de stations */
     final StationParser parser = StationParser.getInstance();
 
     @Test
     public void testTokenizer() throws StationParserException, IOException {
-        List<Token> tokens = StationFileTokenizer.tokenize(new File(path + "stationsOK.txt"));
+        List<Token> tokens = StationFileTokenizer.tokenize(new File(path + "../stationsOK.txt"));
         assertEquals(30, tokens.size());
         String[] expected = { "station", "\"21 - Avenue Fontaine Argent, Boulevard Diderot\"", "{",
                 "latitude", ":", "47.2477615", ";", "longitude", ":", "5.9835995", ";",
@@ -41,7 +41,7 @@ public class ParserTest {
 
     @Test
     public void testParserOK() throws StationParserException, IOException {
-        ASTNode n = parser.parse(new File(path + "stationsOK.txt"));
+        ASTNode n = parser.parse(new File(path + "../stationsOK.txt"));
         assertTrue(n instanceof ASTListeStations);
         assertEquals(2, n.getNumChildren());
         for (ASTNode n1 : n) {
@@ -62,9 +62,7 @@ public class ParserTest {
 
     @Test
     public void testStationBuilder() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File("./target/classes/data/stationsOK.txt"));
-        ASTCheckerVisitor cv = new ASTCheckerVisitor();
-        n.accept(cv);
+        ASTNode n = parser.parse(new File(path + "../stationsOK.txt"));
         ASTStationBuilder builder = new ASTStationBuilder();
         n.accept(builder);
         assertEquals(2, builder.getStations().size());
@@ -84,62 +82,62 @@ public class ParserTest {
 
     @Test (expected = IOException.class)
     public void mauvaisFichier() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"mauvais.txt"));
+        parser.parse(new File(path+"mauvais.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void sansNom() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsSansNom.txt"));
+        parser.parse(new File(path+"stationsSansNom.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void sansPointVirgule() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsErreurPointVirgule.txt"));
+        parser.parse(new File(path+"stationsErreurPointVirgule.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void sansAccolades() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsErreurAccolade.txt"));
+        parser.parse(new File(path+"stationsErreurAccolade.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void egual() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsEgal.txt"));
+        parser.parse(new File(path+"stationsEgal.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void mauvaisId() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsMauvaisIdentificateur.txt"));
+        parser.parse(new File(path+"stationsMauvaisIdentificateur.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void nombreVirgule() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsMauvaisNombre.txt"));
+        parser.parse(new File(path+"stationsMauvaisNombre.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void valeurLettres() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsValeursLettres.txt"));
+        parser.parse(new File(path+"stationsValeursLettres.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void doubleVirgule() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsNombreDoubleVirgule.txt"));
+        parser.parse(new File(path+"stationsNombreDoubleVirgule.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void nomEnChiffres() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsNomEnChiffres.txt"));
+        parser.parse(new File(path+"stationsNomEnChiffres.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void mauvaiseStructure() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsMauvaiseStructure.txt"));
+        parser.parse(new File(path+"stationsMauvaiseStructure.txt"));
     }
 
     @Test (expected = StationParserException.class)
     public void stationsVide() throws IOException, StationParserException {
-        ASTNode n = parser.parse(new File(path+"stationsVides.txt"));
+        parser.parse(new File(path+"stationsVides.txt"));
     }
 
 

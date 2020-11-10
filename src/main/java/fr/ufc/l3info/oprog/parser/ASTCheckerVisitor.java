@@ -32,7 +32,7 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
     public Object visit(ASTListeStations n) {
 
         if (n.children.size() == 0) {
-            errors.put(n.getLCPrefix() + "Liste vide !", ERROR_KIND.EMPTY_LIST);
+            errors.put(n.getLCPrefix() + "La liste de station est vide", ERROR_KIND.EMPTY_LIST);
         }
 
         for (ASTNode child : n) {
@@ -44,7 +44,7 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
 
     @Override
     public Object visit(ASTStation n) {
-        String name = n.getChild(0).value;
+        String name = (String) n.getChild(0).accept(this);
         if (stations.contains(name)) {
             errors.put(n.getLCPrefix() + "Duplicate", ERROR_KIND.DUPLICATE_STATION_NAME);
         }
@@ -81,6 +81,10 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
             }
         }
 
+        if(flag != 7){
+            errors.put(n.getLCPrefix()+"Déclaration manquante",ERROR_KIND.MISSING_DECLARATION);
+        }
+
         return null;
     }
 
@@ -91,10 +95,10 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
 
         if (key.equals("capacite")) {
             if (value.contains(".")) {
-                this.errors.put(n.getLCPrefix() + "La capacité doit etre un entier", ERROR_KIND.WRONG_NUMBER_VALUE);
+                this.errors.put(n.getLCPrefix() + " La capacité doit être un entier", ERROR_KIND.WRONG_NUMBER_VALUE);
             }
-            if (Integer.parseInt(value) <= 0) {
-                this.errors.put(n.getLCPrefix() + "La capacité doit etre strictement positive", ERROR_KIND.WRONG_NUMBER_VALUE);
+            if (Double.parseDouble(value) <= 0) {
+                this.errors.put(n.getLCPrefix() + " La capacité doit être strictement positive", ERROR_KIND.WRONG_NUMBER_VALUE);
             }
 
 
@@ -110,17 +114,17 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
         if(chaine.trim().length() == 0){
             errors.put(n.getLCPrefix()+"Chaine vide",ERROR_KIND.EMPTY_STATION_NAME);
         }
-        return null;
+        return chaine;
     }
 
     @Override
     public Object visit(ASTIdentificateur n) {
-        return null;
+        return n.value;
     }
 
     @Override
     public Object visit(ASTNombre n) {
-        return null;
+        return n.value;
     }
 }
 
