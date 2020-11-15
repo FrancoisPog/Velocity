@@ -1,10 +1,10 @@
 package fr.ufc.l3info.oprog.parser;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +55,7 @@ public class ASTCheckerVisitorTest {
     }
 
     @Test
-    public void capaciteDouble() throws IOException, StationParserException {
+    public void capaciteAvecVirgule() throws IOException, StationParserException {
         ASTNode root = parser.parse(new File(path + "capaciteDouble.txt"));
         ASTStationBuilder builder = new ASTStationBuilder();
         root.accept(builder);
@@ -79,5 +79,95 @@ public class ASTCheckerVisitorTest {
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.WRONG_NUMBER_VALUE));
     }
+
+    @Test
+    public void nomStationVide() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "stationsNomVide.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(1,errors.size());
+        assertTrue(errors.containsValue(ERROR_KIND.EMPTY_STATION_NAME));
+    }
+
+    @Test
+    public void declarationManquante() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "declarationManquante.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(1,errors.size());
+        assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
+    }
+
+    @Test
+    public void declarationEnDouble() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "declarationEnDouble.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(1,errors.size());
+        assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_DECLARATION));
+    }
+
+    @Test
+    public void toutFaux() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "toutFaux.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(6,errors.size());
+        assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_DECLARATION));
+        assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
+        assertTrue(errors.containsValue(ERROR_KIND.WRONG_NUMBER_VALUE));
+        assertTrue(errors.containsValue(ERROR_KIND.EMPTY_STATION_NAME));
+        assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_STATION_NAME));
+        assertEquals(Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE),2);
+    }
+
+    @Test
+    public void declarationsManquantes() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "declarationsManquantes.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(2,errors.size());
+        assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
+        assertEquals(Collections.frequency(errors.values(),ERROR_KIND.MISSING_DECLARATION),2);
+    }
+
+    @Test
+    public void declarationManquanteEtDeclarationEnDouble() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "declarationManquanteEtDeclarationEnDouble.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(2,errors.size());
+        assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
+        assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_DECLARATION));
+
+    }
+
+    // TODO : Demander pour le nombre d'occurrence
+
+
 
 }

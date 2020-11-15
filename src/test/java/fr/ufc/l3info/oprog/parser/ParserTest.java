@@ -140,6 +140,9 @@ public class ParserTest {
         parser.parse(new File(path+"stationsVides.txt"));
     }
 
-
+    @Test (expected = StationParserException.class)
+    public void nomSimpleQuote() throws IOException, StationParserException {
+        parser.parse(new File(path+"stationsNomSimpleQuote.txt"));
+    }
 
 }
