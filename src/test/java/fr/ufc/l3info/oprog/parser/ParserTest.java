@@ -145,4 +145,11 @@ public class ParserTest {
         parser.parse(new File(path+"stationsNomSimpleQuote.txt"));
     }
 
+    @Test (expected = StationParserException.class)
+    public void virgule() throws IOException, StationParserException {
+        parser.parse(new File(path+"stationsVirgule.txt"));
+    }
+
+
+
 }

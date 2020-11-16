@@ -26,6 +26,7 @@ public class ASTCheckerVisitorTest {
         root.accept(builder);
         ASTCheckerVisitor checker = new ASTCheckerVisitor();
         root.accept(checker);
+
     }
 
     @Test
@@ -39,6 +40,7 @@ public class ASTCheckerVisitorTest {
         Map<String,ERROR_KIND> errors = checker.getErrors();
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.EMPTY_LIST));
+        //print_errors(errors);
     }
 
     @Test
@@ -52,6 +54,7 @@ public class ASTCheckerVisitorTest {
         Map<String,ERROR_KIND> errors = checker.getErrors();
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_STATION_NAME));
+        //print_errors(errors);
     }
 
     @Test
@@ -65,6 +68,7 @@ public class ASTCheckerVisitorTest {
         Map<String,ERROR_KIND> errors = checker.getErrors();
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.WRONG_NUMBER_VALUE));
+        //print_errors(errors);
     }
 
     @Test
@@ -78,6 +82,7 @@ public class ASTCheckerVisitorTest {
         Map<String,ERROR_KIND> errors = checker.getErrors();
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.WRONG_NUMBER_VALUE));
+        //print_errors(errors);
     }
 
     @Test
@@ -91,6 +96,7 @@ public class ASTCheckerVisitorTest {
         Map<String,ERROR_KIND> errors = checker.getErrors();
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.EMPTY_STATION_NAME));
+        //print_errors(errors);
     }
 
     @Test
@@ -104,6 +110,7 @@ public class ASTCheckerVisitorTest {
         Map<String,ERROR_KIND> errors = checker.getErrors();
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
+        //print_errors(errors);
     }
 
     @Test
@@ -117,6 +124,7 @@ public class ASTCheckerVisitorTest {
         Map<String,ERROR_KIND> errors = checker.getErrors();
         assertEquals(1,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_DECLARATION));
+        //print_errors(errors);
     }
 
     @Test
@@ -135,6 +143,7 @@ public class ASTCheckerVisitorTest {
         assertTrue(errors.containsValue(ERROR_KIND.EMPTY_STATION_NAME));
         assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_STATION_NAME));
         assertEquals(Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE),2);
+        //print_errors(errors);
     }
 
     @Test
@@ -146,9 +155,10 @@ public class ASTCheckerVisitorTest {
         root.accept(checker);
 
         Map<String,ERROR_KIND> errors = checker.getErrors();
-        assertEquals(2,errors.size());
+        assertEquals(4,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
-        assertEquals(Collections.frequency(errors.values(),ERROR_KIND.MISSING_DECLARATION),2);
+        assertEquals(Collections.frequency(errors.values(),ERROR_KIND.MISSING_DECLARATION),4);
+        //print_errors(errors);
     }
 
     @Test
@@ -163,11 +173,48 @@ public class ASTCheckerVisitorTest {
         assertEquals(2,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
         assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_DECLARATION));
+        //print_errors(errors);
+    }
+
+    @Test
+    public void capaciteNegativeAvecVirgule() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "capaciteNegativeAvecVirgule.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(2,errors.size());
+        assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE));
+        //print_errors(errors);
+    }
+
+    @Test
+    public void dixErreurs() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "dixErreurs.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        //print_errors(errors);
+        assertEquals(10,errors.size());
+        assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE));
+        assertEquals(1,Collections.frequency(errors.values(),ERROR_KIND.DUPLICATE_STATION_NAME));
+        assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.MISSING_DECLARATION));
+        assertEquals(3,Collections.frequency(errors.values(),ERROR_KIND.DUPLICATE_DECLARATION));
+        assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.EMPTY_STATION_NAME));
+
 
     }
 
-    // TODO : Demander pour le nombre d'occurrence
-
+    public void print_errors(Map<String,ERROR_KIND> errors){
+        for(String error : errors.keySet()){
+            System.out.println(errors.get(error) +" - "+ error);
+        }
+    }
 
 
 }

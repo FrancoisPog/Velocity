@@ -1,0 +1,33 @@
+station "21 - Avenue Fontaine Argent, Boulevard Diderot" {
+    latitude:47.2477615;
+    longitude:5.9835995;
+    longitude:8;
+    latitude:47.2477615;
+
+    capacite:12
+}
+
+station "Avenue du Maréchal Foch" {
+    capacite : -10
+}
+
+station "    " {
+    latitude:47.2477615;
+    longitude:5.9835995;
+    capacite:12
+}
+
+station "" {
+    latitude:47.2477615;
+    longitude:5.9835995;
+    capacite:12.0
+}
+
+station "21 - Avenue Fontaine Argent, Boulevard Diderot" {
+    longitude:-5.9835995;
+    latitude:473.2477615;
+    latitude:47.2477615;
+    latitude:3.2477615;
+    capacite:124
+}
+

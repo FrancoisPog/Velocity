@@ -1,6 +1,6 @@
 package fr.ufc.l3info.oprog.parser;
 
-import java.lang.invoke.SwitchPoint;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
     public Object visit(ASTListeStations n) {
 
         if (n.children.size() == 0) {
-            errors.put(n.getLCPrefix() + "La liste de station est vide", ERROR_KIND.EMPTY_LIST);
+            errors.put(n.getLCPrefix() + " La liste de station est vide", ERROR_KIND.EMPTY_LIST);
         }
 
         for (ASTNode child : n) {
@@ -46,34 +46,37 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
     public Object visit(ASTStation n) {
         String name = (String) n.getChild(0).accept(this);
         if (stations.contains(name)) {
-            errors.put(n.getLCPrefix() + "Duplicate", ERROR_KIND.DUPLICATE_STATION_NAME);
+            errors.put(n.getLCPrefix() + " Duplication de la station '"+name+"'"  , ERROR_KIND.DUPLICATE_STATION_NAME);
         }
         stations.add(name);
 
-        int flag = 0;
+        boolean haveCapacite = false;
+        boolean haveLatitude = false;
+        boolean haveLongitude = false;
+
         for (int i = 1; i < n.getNumChildren(); ++i) {
             String childName = (String) n.getChild(i).accept(this);
 
             switch (childName) {
                 case "capacite": {
-                    if (flag == (flag | 4)) {
-                        errors.put(n.getLCPrefix()+"Duplication de la déclaration", ERROR_KIND.DUPLICATE_DECLARATION);
+                    if (haveCapacite) {
+                        errors.put(n.getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
                     }
-                    flag = flag | 4;
+                    haveCapacite = true;
                     break;
                 }
                 case "latitude" : {
-                    if (flag == (flag | 2)) {
-                        errors.put(n.getLCPrefix()+"Duplication de la déclaration", ERROR_KIND.DUPLICATE_DECLARATION);
+                    if (haveLatitude) {
+                        errors.put(n.getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
                     }
-                    flag = flag | 2;
+                    haveLatitude = true;
                     break;
                 }
                 case "longitude" : {
-                    if (flag == (flag | 1)) {
-                        errors.put(n.getLCPrefix()+"Duplication de la déclaration", ERROR_KIND.DUPLICATE_DECLARATION);
+                    if (haveLongitude) {
+                        errors.put(n.getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
                     }
-                    flag = flag | 1;
+                    haveLongitude = true;
                     break;
                 }
                 default:
@@ -81,8 +84,14 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
             }
         }
 
-        if(flag != 7){
-            errors.put(n.getLCPrefix()+"Déclaration manquante",ERROR_KIND.MISSING_DECLARATION);
+        if(!haveCapacite){
+            errors.put(n.getLCPrefix()+" Déclaration 'capacite' manquante",ERROR_KIND.MISSING_DECLARATION);
+        }
+        if(!haveLatitude){
+            errors.put(n.getLCPrefix()+" Déclaration 'latitude' manquante",ERROR_KIND.MISSING_DECLARATION);
+        }
+        if(!haveLongitude){
+            errors.put(n.getLCPrefix()+" Déclaration 'longitude' manquante",ERROR_KIND.MISSING_DECLARATION);
         }
 
         return null;
@@ -112,7 +121,7 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
         String chaine = n.toString().substring(1,n.toString().length() - 1);
 
         if(chaine.trim().length() == 0){
-            errors.put(n.getLCPrefix()+"Chaine vide",ERROR_KIND.EMPTY_STATION_NAME);
+            errors.put(n.getLCPrefix()+" La chaine est vide",ERROR_KIND.EMPTY_STATION_NAME);
         }
         return chaine;
     }
