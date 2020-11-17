@@ -60,21 +60,21 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
             switch (childName) {
                 case "capacite": {
                     if (haveCapacite) {
-                        errors.put(n.getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
+                        errors.put(n.getChild(i).getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
                     }
                     haveCapacite = true;
                     break;
                 }
                 case "latitude" : {
                     if (haveLatitude) {
-                        errors.put(n.getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
+                        errors.put(n.getChild(i).getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
                     }
                     haveLatitude = true;
                     break;
                 }
                 case "longitude" : {
                     if (haveLongitude) {
-                        errors.put(n.getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
+                        errors.put(n.getChild(i).getLCPrefix()+" Duplication de la déclaration '"+childName+"'" , ERROR_KIND.DUPLICATE_DECLARATION);
                     }
                     haveLongitude = true;
                     break;

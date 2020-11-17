@@ -27,6 +27,8 @@ public class ASTCheckerVisitorTest {
         ASTCheckerVisitor checker = new ASTCheckerVisitor();
         root.accept(checker);
 
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        assertEquals(0,errors.size());
     }
 
     @Test
@@ -191,8 +193,8 @@ public class ASTCheckerVisitorTest {
     }
 
     @Test
-    public void dixErreurs() throws IOException, StationParserException {
-        ASTNode root = parser.parse(new File(path + "dixErreurs.txt"));
+    public void onzeErreurs() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "onzeErreurs.txt"));
         ASTStationBuilder builder = new ASTStationBuilder();
         root.accept(builder);
         ASTCheckerVisitor checker = new ASTCheckerVisitor();
@@ -200,13 +202,27 @@ public class ASTCheckerVisitorTest {
 
         Map<String,ERROR_KIND> errors = checker.getErrors();
         //print_errors(errors);
-        assertEquals(10,errors.size());
+        assertEquals(11,errors.size());
         assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE));
         assertEquals(1,Collections.frequency(errors.values(),ERROR_KIND.DUPLICATE_STATION_NAME));
         assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.MISSING_DECLARATION));
-        assertEquals(3,Collections.frequency(errors.values(),ERROR_KIND.DUPLICATE_DECLARATION));
+        assertEquals(4,Collections.frequency(errors.values(),ERROR_KIND.DUPLICATE_DECLARATION));
         assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.EMPTY_STATION_NAME));
+    }
 
+
+    @Test
+    public void duplicationDeclarations() throws IOException, StationParserException {
+        ASTNode root = parser.parse(new File(path + "duplicationDeclarations.txt"));
+        ASTStationBuilder builder = new ASTStationBuilder();
+        root.accept(builder);
+        ASTCheckerVisitor checker = new ASTCheckerVisitor();
+        root.accept(checker);
+
+        Map<String,ERROR_KIND> errors = checker.getErrors();
+        //print_errors(errors);
+        assertEquals(6,errors.size());
+        assertEquals(6,Collections.frequency(errors.values(),ERROR_KIND.DUPLICATE_DECLARATION));
 
     }
 
