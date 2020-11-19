@@ -17,6 +17,7 @@ public class ParserTest {
 
     /** Chemin vers les fichiers de test */
     final String path = "./target/classes/data/parserError/";
+    final String pathExtra = "./target/classes/data/extraError/";
 
     /** Instance singleton du parser de stations */
     final StationParser parser = StationParser.getInstance();
@@ -150,6 +151,74 @@ public class ParserTest {
         parser.parse(new File(path+"stationsVirgule.txt"));
     }
 
+    @Test(expected = StationParserException.class)
+    public void testParser_Guillemet() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_chaine.txt"));
+    }
 
+    @Test(expected = StationParserException.class)
+    public void testParser_Guillemet2() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_singlequotes.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_Accolade() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_accolade.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_PasString() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_passtring.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_Backslash() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_backslash.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_Identificateur() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_identificateur.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_IdentificateurOneMoreThing() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_identificateuronemorething.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_PointVirgule() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_pointvirgule.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_PointVirguleDouble() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_pointvirguledouble.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_PointVirguleDernier() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_pointvirguledernier.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_DeuxPoints() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_deuxpoints.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_SansNombre() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_sansnombre.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_NombreVirgules() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_nombrevirgules.txt"));
+    }
+
+    @Test(expected = StationParserException.class)
+    public void testParser_Stazion() throws IOException, StationParserException {
+        parser.parse(new File(pathExtra + "station_stazion.txt"));
+    }
 
 }

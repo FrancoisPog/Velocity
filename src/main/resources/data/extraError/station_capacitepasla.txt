@@ -1,0 +1,4 @@
+station "Avenue du Maréchal Foch" {
+    longitude : 6.022671 ;
+    latitude : 47.246511
+}

@@ -1,10 +1,9 @@
 package fr.ufc.l3info.oprog;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.util.regex.Pattern;
-
 import static org.junit.Assert.*;
 
 public class OptionTest {
@@ -12,6 +11,9 @@ public class OptionTest {
     private IVelo veloBase, veloToutesOptions;
     final String regex_toString = "^Vélo cadre (homme|femme|mixte)(, (cadre aluminium|freins à disque|assistance électrique|suspension arrière|suspension avant))* - \\d+.\\d km$";
 
+    final private IVelo DEFAULT_VELO = new Velo();
+    private OptCadreAlu vSimple;
+    private IVelo v;
 
     @Before
     public void InitVelos() {
@@ -23,6 +25,9 @@ public class OptionTest {
         veloToutesOptions = new OptAssistanceElectrique(veloToutesOptions);
         veloToutesOptions = new OptCadreAlu(veloToutesOptions);
         veloToutesOptions = new OptSuspensionAvant(veloToutesOptions);
+
+        this.v = new Velo();
+        this.vSimple = new OptCadreAlu(this.v);
     }
 
     @Test
@@ -99,6 +104,129 @@ public class OptionTest {
         assertEquals(5.5,veloBase.tarif(),1e-3);
     }
 
+    /* ---------- Méthodes de vélo ---------- */
 
+    @Test
+    public void testVeloMethods_kilometrage() {
+        Assert.assertEquals(vSimple.kilometrage(), 0, 0.001);
+        Assert.assertEquals(vSimple.prochaineRevision(), 500, 0.001);
+        vSimple.parcourir(100);
+        Assert.assertEquals(vSimple.kilometrage(), 100, 0.001);
+        vSimple.parcourir(-100);
+        Assert.assertEquals(vSimple.kilometrage(), 100, 0.001);
+        Assert.assertEquals(vSimple.prochaineRevision(), 500 - 100, 0.001);
+    }
+
+    @Test
+    public void testVeloMethods_lifecycle() {
+        Assert.assertEquals(vSimple.decrocher(), -1);
+        Assert.assertEquals(vSimple.arrimer(), 0);
+        Assert.assertEquals(vSimple.arrimer(), -1);
+        Assert.assertEquals(vSimple.decrocher(), 0);
+    }
+
+    @Test
+    public void testVeloMethods_lifecycle2() {
+        Assert.assertFalse(vSimple.estAbime());
+        v.abimer();
+        Assert.assertTrue(vSimple.estAbime());
+        Assert.assertEquals(vSimple.arrimer(), 0);
+        Assert.assertEquals(vSimple.reviser(), -1);
+        Assert.assertEquals(vSimple.decrocher(), 0);
+        Assert.assertEquals(vSimple.reviser(), 0);
+        Assert.assertFalse(vSimple.estAbime());
+    }
+
+    @Test
+    public void testVeloMethods_lifecycle3() {
+        Assert.assertFalse(vSimple.estAbime());
+        vSimple.abimer();
+        Assert.assertTrue(vSimple.estAbime());
+        vSimple.arrimer();
+        Assert.assertEquals(vSimple.reparer(), -1);
+        vSimple.decrocher();
+        Assert.assertEquals(vSimple.reparer(), 0);
+        Assert.assertEquals(vSimple.reparer(), -2);
+    }
+
+    /* ---------- Option Cadre Aluminium ---------- */
+
+    @Test
+    public void testOptionCadreAlu_Tarif() {
+        v = new OptCadreAlu(v);
+
+        Assert.assertEquals(v.tarif(), DEFAULT_VELO.tarif() + 0.2, 0);
+    }
+
+    @Test
+    public void testOptionCadreAlu_ToString() {
+        v = new OptCadreAlu(v);
+
+        Assert.assertEquals(v.toString(), "Vélo cadre mixte, cadre aluminium - 0.0 km");
+    }
+
+    /* ---------- Option Freins disque ---------- */
+
+    @Test
+    public void testOptionFreinsDisque_Tarif() {
+        v = new OptFreinsDisque(v);
+
+        Assert.assertEquals(v.tarif(), DEFAULT_VELO.tarif() + 0.3, 0);
+    }
+
+    @Test
+    public void testOptionFreinsDisque_ToString() {
+        v = new OptFreinsDisque(v);
+
+        Assert.assertEquals(v.toString(), "Vélo cadre mixte, freins à disque - 0.0 km");
+    }
+
+    /* ---------- Option Suspension avant ---------- */
+
+    @Test
+    public void testOptionSuspensionAvant_Tarif() {
+        v = new OptSuspensionAvant(v);
+
+        Assert.assertEquals(v.tarif(), DEFAULT_VELO.tarif() + 0.5, 0);
+    }
+
+    @Test
+    public void testOptionSuspensionAvant_ToString() {
+        v = new OptSuspensionAvant(v);
+
+        Assert.assertEquals(v.toString(), "Vélo cadre mixte, suspension avant - 0.0 km");
+    }
+
+    /* ---------- Option Suspension arrière ---------- */
+
+    @Test
+    public void testOptionSuspensionArriere_Tarif() {
+        v = new OptSuspensionArriere(v);
+
+        Assert.assertEquals(v.tarif(), DEFAULT_VELO.tarif() + 0.5, 0);
+    }
+
+    @Test
+    public void testOptionSuspensionArriere_ToString() {
+        v = new OptSuspensionArriere(v);
+
+        Assert.assertEquals(v.toString(), "Vélo cadre mixte, suspension arrière - 0.0 km");
+    }
+
+    /* ---------- Option Assistance électrique ---------- */
+
+    @Test
+    public void testOptionAssistanceElectrique_Tarif() {
+        v = new OptAssistanceElectrique(v);
+
+        Assert.assertEquals(v.tarif(), DEFAULT_VELO.tarif() + 2, 0);
+    }
+
+    @Test
+    public void testOptionAssistanceElectrique_ToString() {
+        v = new OptAssistanceElectrique(v);
+
+        Assert.assertEquals(v.toString(), "Vélo cadre mixte, assistance électrique - 0.0 km");
+    }
 
 }

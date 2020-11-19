@@ -1,0 +1,5 @@
+station "Station USA" {
+    STOP:47.2477615;
+    THE:5.9835995;
+    COUNT:12
+}

@@ -1,0 +1,4 @@
+station "Avenue du Maréchal Foch" {
+    capacite : 10 ;
+    latitude : 42.0
+}

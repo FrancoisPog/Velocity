@@ -3,9 +3,7 @@ package fr.ufc.l3info.oprog;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class JRegistreTest {
 
@@ -21,13 +19,22 @@ public class JRegistreTest {
             "ASSISTANCE_ELECTRIQUE"
     };
 
+    private JRegistre jr;
+
+    private Velo v;
+    private Abonne a;
+
     public long maintenantMoinsNMin(long min){
         return System.currentTimeMillis() - 1000*60*min;
     }
 
     @Before
-    public void initRegistreVide(){
+    public void initRegistreVide() throws IncorrectNameException {
         registre = new JRegistre();
+
+        jr = new JRegistre();
+        v = new Velo();
+        a = new Abonne("François Poguet");
     }
 
     @Before
@@ -215,6 +222,216 @@ public class JRegistreTest {
 
     }
 
+    /* ---------- Emprunter ---------- */
 
+    @Test
+    public void testEmprunter_Good()  {
+        int ret = this.jr.emprunter(this.a, this.v, System.currentTimeMillis());
+        Assert.assertEquals(ret, 0);
+
+        Velo v2 = new Velo();
+        ret = this.jr.emprunter(this.a, v2, System.currentTimeMillis());
+        Assert.assertEquals(ret, 0);
+
+        Velo v3 = new Velo();
+        ret = this.jr.emprunter(this.a, v3, System.currentTimeMillis() - 100);
+        Assert.assertEquals(ret, 0);
+    }
+
+    @Test
+    public void testEmprunter_Null() {
+        int ret;
+
+        ret = this.jr.emprunter(null, this.v, System.currentTimeMillis());
+        Assert.assertEquals(ret, -1);
+
+        ret = this.jr.emprunter(this.a, null, System.currentTimeMillis());
+        Assert.assertEquals(ret, -1);
+
+        ret = this.jr.emprunter(null, null, System.currentTimeMillis());
+        Assert.assertEquals(ret, -1);
+    }
+
+    @Test
+    public void testEmprunter_Already() throws IncorrectNameException {
+        int ret;
+        long date = System.currentTimeMillis();
+
+        ret = this.jr.emprunter(this.a, this.v, date);
+        Assert.assertEquals(ret, 0);
+
+        // In progress
+        ret = this.jr.emprunter(this.a, this.v, date);
+        Assert.assertEquals(ret, -2);
+
+        // In progress
+        Abonne b = new Abonne("Lucas Cosson");
+        ret = this.jr.emprunter(b, this.v, date + 10);
+        Assert.assertEquals(ret, -2);
+
+        // End
+        this.jr.retourner(this.v, date + 100);
+        ret = this.jr.emprunter(this.a, this.v, date);
+        Assert.assertEquals(ret, -2);
+
+        // End
+        ret = this.jr.emprunter(this.a, this.v, date + 200);
+        Assert.assertEquals(ret, 0);
+    }
+
+    /* ---------- Retourner ---------- */
+
+    @Test
+    public void testRetourner_Good() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+
+        int ret;
+        ret = this.jr.retourner(this.v, date + 5);
+        Assert.assertEquals(ret, 0);
+
+        this.jr.emprunter(this.a, this.v, date + 50);
+        ret = this.jr.retourner(this.v, date + 100);
+        Assert.assertEquals(ret, 0);
+    }
+
+    @Test
+    public void testRetourner_Null() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+
+        int ret;
+        ret = this.jr.retourner(null, date + 5);
+        Assert.assertEquals(ret, -1);
+    }
+
+    @Test
+    public void testRetourner_Error() {
+        long date = System.currentTimeMillis();
+
+        int ret;
+        ret = jr.retourner(this.v, date + 5);
+        Assert.assertEquals(ret, -2);
+
+        this.jr.emprunter(this.a, this.v, date + 10);
+        ret = jr.retourner(this.v, date + 15);
+        Assert.assertEquals(ret, 0);
+
+        ret = jr.retourner(this.v, date + 20);
+        Assert.assertEquals(ret, -2);
+    }
+
+    @Test
+    public void testRetourner_Date() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+
+        int ret;
+
+        ret = this.jr.retourner(this.v, date - 20);
+        Assert.assertEquals(ret, -3);
+        ret = this.jr.retourner(this.v, date + 20);
+        Assert.assertEquals(ret, 0);
+    }
+
+    /* ---------- nbEmpruntsEnCours ---------- */
+
+    @Test
+    public void testNbEmpruntsEnCours() {
+        long date = System.currentTimeMillis();
+
+        Assert.assertEquals(this.jr.nbEmpruntsEnCours(this.a), 0);
+
+        this.jr.emprunter(this.a, this.v, date - 20);
+
+        Assert.assertEquals(this.jr.nbEmpruntsEnCours(this.a), 1);
+
+        Velo v2 = new Velo();
+        this.jr.emprunter(this.a, v2, date - 10);
+
+        Assert.assertEquals(this.jr.nbEmpruntsEnCours(this.a), 2);
+
+        this.jr.retourner(v2, date - 5);
+
+        Assert.assertEquals(this.jr.nbEmpruntsEnCours(this.a), 1);
+
+        Velo v3 = new Velo();
+        this.jr.emprunter(this.a, v3, date + 100000);
+    }
+
+    /* ---------- Facturation ---------- */
+
+    @Test
+    public void testFacturation_Nothing() {
+        long date = System.currentTimeMillis();
+
+        double ret = this.jr.facturation(this.a, date, date + 10);
+        Assert.assertEquals(0, ret, 0.001);
+    }
+
+    @Test
+    public void testFacturation_InProgress() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+
+        double ret = this.jr.facturation(this.a, date, date + 10);
+        Assert.assertEquals(0, ret, 0.001);
+    }
+
+    @Test
+    public void testFacturation_One() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+        this.jr.retourner(this.v, date + 1000*60*60);
+
+        double ret = this.jr.facturation(this.a, date, date + 10000000);
+        Assert.assertEquals(this.v.tarif(), ret, 0.001);
+    }
+
+    @Test
+    public void testFacturation_OneBis() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+        this.jr.retourner(this.v, date + 1000*60*30);
+
+        double ret = this.jr.facturation(this.a, date, date + 10000000);
+        Assert.assertEquals(this.v.tarif() / 2, ret, 0.001);
+    }
+
+    @Test
+    public void testFacturation_DateOut() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+        this.jr.retourner(this.v, date + 1000*60*30);
+
+        double ret = this.jr.facturation(this.a, date, date + 300);
+        Assert.assertEquals(0, ret, 0.001);
+    }
+
+    @Test
+    public void testFacturation_Error() {
+        long date = System.currentTimeMillis();
+
+        this.jr.emprunter(this.a, this.v, date);
+        this.jr.retourner(this.v, date + 1000*60*30);
+
+        double ret = this.jr.facturation(this.a, date + 10000000, date);
+        Assert.assertEquals(0, ret, 0.001);
+    }
+
+    @Test
+    public void testFacturation_Null() {
+        long date = System.currentTimeMillis();
+
+        double ret = this.jr.facturation(null, date, date + 200);
+        Assert.assertEquals(0, ret, 0.001);
+    }
 
 }
