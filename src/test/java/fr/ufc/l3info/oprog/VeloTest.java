@@ -9,10 +9,12 @@ import static org.junit.Assert.*;
 public class VeloTest {
 
     private Velo velo;
+    Velo vM;
 
     @Before
     public void InitVelo(){
         velo = new Velo();
+        this.vM = new Velo();
     }
 
     @Test
@@ -145,6 +147,188 @@ public class VeloTest {
         assertEquals("Vélo cadre femme - 0.0 km",new Velo('f').toString());
     }
 
+    /* ---------- Création d'un nouveau vélo ---------- */
 
+    public void checkInitialValues(Velo v) {
+        Assert.assertEquals(v.kilometrage(), 0.0, 0);
+        Assert.assertFalse(v.estAbime());
+        Assert.assertEquals(v.decrocher(), -1);
+        Assert.assertEquals(v.tarif(), 2.0, 0);
+    }
+
+    @Test
+    public void testNouveauVelo_Defaut() {
+        Velo vCreated = new Velo();
+
+        Assert.assertEquals(vCreated.toString(), "Vélo cadre mixte - 0.0 km");
+        checkInitialValues(vCreated);
+    }
+
+    @Test
+    public void testNouveauVelo_Femme_LowerCase() {
+        Velo vCreated = new Velo('f');
+
+        Assert.assertEquals(vCreated.toString(), "Vélo cadre femme - 0.0 km");
+        checkInitialValues(vCreated);
+    }
+
+    @Test
+    public void testNouveauVelo_Femme_UpperCase() {
+        Velo vCreated = new Velo('F');
+
+        Assert.assertEquals(vCreated.toString(), "Vélo cadre femme - 0.0 km");
+        checkInitialValues(vCreated);
+    }
+
+    @Test
+    public void testNouveauVelo_Homme_LowerCase() {
+        Velo vCreated = new Velo('h');
+
+        Assert.assertEquals(vCreated.toString(), "Vélo cadre homme - 0.0 km");
+        checkInitialValues(vCreated);
+    }
+
+    @Test
+    public void testNouveauVelo_Homme_UpperCase() {
+        Velo vCreated = new Velo('h');
+
+        Assert.assertEquals(vCreated.toString(), "Vélo cadre homme - 0.0 km");
+        checkInitialValues(vCreated);
+    }
+
+    @Test
+    public void testNouveauVelo_Diff() {
+        Velo vCreated = new Velo('j');
+
+        Assert.assertEquals(vCreated.toString(), "Vélo cadre mixte - 0.0 km");
+        checkInitialValues(vCreated);
+    }
+
+    /* ---------- Évolution de l'état du vélo ---------- */
+
+    @Test
+    public void testLifeCycle_First() {
+        Assert.assertEquals(this.vM.decrocher(), -1);
+        Assert.assertEquals(this.vM.arrimer(), 0);
+    }
+
+    @Test
+    public void testLifeCycle_Second() {
+        Assert.assertEquals(this.vM.arrimer(), 0);
+        this.vM.abimer();
+        Assert.assertTrue(this.vM.estAbime());
+    }
+
+    @Test
+    public void testLifeCycle_Third() {
+        this.vM.abimer();
+        Assert.assertTrue(this.vM.estAbime());
+        Assert.assertEquals(this.vM.arrimer(), 0);
+        Assert.assertTrue(this.vM.estAbime());
+        Assert.assertEquals(this.vM.decrocher(), 0);
+    }
+
+    @Test
+    public void testLifeCycle_Fourth() {
+        Assert.assertEquals(this.vM.arrimer(), 0);
+        Assert.assertEquals(this.vM.arrimer(), -1);
+        Assert.assertEquals(this.vM.decrocher(), 0);
+        Assert.assertEquals(this.vM.decrocher(), -1);
+    }
+
+    @Test
+    public void testLifeCycle_Fith() {
+        Assert.assertEquals(this.vM.reparer(), -2);
+        this.vM.abimer();
+        Assert.assertEquals(this.vM.reparer(), 0);
+        Assert.assertFalse(this.vM.estAbime());
+    }
+
+    @Test
+    public void testLifeCycle_Sixth() {
+        this.vM.abimer();
+        Assert.assertTrue(this.vM.estAbime());
+        this.vM.abimer();
+        Assert.assertTrue(this.vM.estAbime());
+        Assert.assertEquals(this.vM.arrimer(), 0);
+        Assert.assertEquals(this.vM.reparer(), -1);
+        Assert.assertEquals(this.vM.decrocher(), 0);
+        Assert.assertEquals(this.vM.reparer(), 0);
+        Assert.assertFalse(this.vM.estAbime());
+    }
+
+    /* ---------- Évolution des kms ---------- */
+
+    @Test
+    public void testKilometers_First() {
+        Assert.assertEquals(this.vM.prochaineRevision(), 500, 0);
+        this.vM.parcourir(300);
+        Assert.assertEquals(this.vM.prochaineRevision(), 200, 0.001);
+        Assert.assertEquals(this.vM.kilometrage(), 300, 0.001);
+        this.vM.parcourir(300);
+        Assert.assertEquals(this.vM.prochaineRevision(), -100, 0.001);
+        Assert.assertEquals(this.vM.kilometrage(), 600, 0.001);
+    }
+
+    @Test
+    public void testKilometers_Second() {
+        this.vM.parcourir(100);
+        Assert.assertEquals(this.vM.kilometrage(), 100, 0.001);
+        this.vM.arrimer();
+        this.vM.parcourir(300);
+        Assert.assertEquals(this.vM.kilometrage(), 100, 0.001);
+        this.vM.decrocher();
+        this.vM.parcourir(300);
+        Assert.assertEquals(this.vM.kilometrage(), 400, 0.001);
+    }
+
+    @Test
+    public void testKilometers_Third() {
+        this.vM.parcourir(490);
+        Assert.assertEquals(this.vM.kilometrage(), 490, 0.001);
+        Assert.assertEquals(this.vM.prochaineRevision(), 10, 0.001);
+        Assert.assertEquals(this.vM.reviser(), 0, 0);
+        Assert.assertEquals(this.vM.prochaineRevision(), 500, 0.001);
+    }
+
+    @Test
+    public void testKilometers_Fourth() {
+        this.vM.parcourir(300);
+        this.vM.arrimer();
+        Assert.assertEquals(this.vM.reviser(), -1, 0);
+        Assert.assertEquals(this.vM.prochaineRevision(), 200, 0.001);
+    }
+
+    @Test
+    public void testKilometers_Fith() {
+        this.vM.parcourir(400);
+        this.vM.abimer();
+        Assert.assertTrue(this.vM.estAbime());
+        Assert.assertEquals(this.vM.reviser(), 0, 0);
+        Assert.assertFalse(this.vM.estAbime());
+        Assert.assertEquals(this.vM.prochaineRevision(), 500, 0.001);
+        this.vM.parcourir(600);
+        Assert.assertEquals(this.vM.prochaineRevision(), -100, 0.001);
+    }
+
+    @Test
+    public void testKilometers_Sixth() {
+        this.vM.parcourir(42);
+        Assert.assertEquals(this.vM.kilometrage(), 42, 0.001);
+        this.vM.parcourir(-24);
+        Assert.assertEquals(this.vM.kilometrage(), 42, 0.001);
+        this.vM.parcourir(10);
+        Assert.assertEquals(this.vM.kilometrage(), 52, 0.001);
+    }
+
+    @Test
+    public void testKilometers_Seventh() {
+        this.vM.parcourir(400);
+        Assert.assertEquals(this.vM.toString(), "Vélo cadre mixte - 400.0 km");
+        this.vM.parcourir(100.5168);
+        Assert.assertEquals(this.vM.toString(), "Vélo cadre mixte - 500.5 km (révision nécessaire)");
+        this.vM.reviser();
+        Assert.assertEquals(this.vM.toString(), "Vélo cadre mixte - 500.5 km");
+    }
 
 }

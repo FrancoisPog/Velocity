@@ -1,0 +1,5 @@
+stazion "21 - Avenue Fontaine Argent, Boulevard Diderot" {
+    latitude:47.2477615;
+    longitude:5.9835995;
+    capacite:12
+}

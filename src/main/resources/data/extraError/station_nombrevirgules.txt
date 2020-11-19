@@ -1,0 +1,5 @@
+station "Socket.io" {
+    capacite : 10 ;
+    longitude : 3.0.1 ;
+    latitude : 47.246511
+}

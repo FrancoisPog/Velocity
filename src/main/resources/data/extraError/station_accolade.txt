@@ -1,0 +1,5 @@
+station "La station avec une mauvaise accolade" }
+    latitude:47.2477615;
+    longitude:5.9835995;
+    capacite:12
+}

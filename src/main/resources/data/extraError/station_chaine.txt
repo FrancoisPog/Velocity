@@ -1,0 +1,5 @@
+station "La station avec une " dans le nom" {
+    latitude:47.2477615;
+    longitude:5.9835995;
+    capacite:12
+}
