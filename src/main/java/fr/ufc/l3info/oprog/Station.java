@@ -71,6 +71,9 @@ public class Station {
         }
         IVelo v = veloALaBorne(b);
         if (v != null) {
+            if(v.estAbime()){
+                return null;
+            }
             this.velos[b - 1] = null;
             v.decrocher();
         }
@@ -88,6 +91,13 @@ public class Station {
 
         if (v.arrimer() != 0) {
             return -3;
+        }
+
+        if(v.estAbime()){
+            Abonne casseur = registre.emprunteur(v);
+            if(casseur != null){
+                casseur.bloquer();
+            }
         }
 
         if (this.registre.retourner(v, maintenant()) != 0) {
