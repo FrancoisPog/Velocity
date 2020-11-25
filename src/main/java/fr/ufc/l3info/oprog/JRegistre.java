@@ -104,6 +104,14 @@ public class JRegistre implements IRegistre {
         return facture;
     }
 
+    @Override
+    public Abonne emprunteur(IVelo v) {
+        if(empruntsEnCours.containsKey(v)){
+            return empruntsEnCours.get(v);
+        }
+        return null;
+    }
+
 
     private class Emprunt {
 
