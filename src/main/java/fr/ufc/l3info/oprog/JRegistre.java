@@ -94,11 +94,27 @@ public class JRegistre implements IRegistre {
     @Override
     public double facturation(Abonne a, long debut, long fin) {
         double facture = 0.0;
+        int nbEmprunts = 0;
         if (empruntsParAbonne.get(a) != null) {
+
             for (Emprunt e : empruntsParAbonne.get(a)) {
+
                 if (e.finitEntre(debut, fin)) {
-                    facture += e.cout();
+
+                    if (e.fin - e.debut >= 5 * 60 * 1000 && nbEmprunts < 51) {
+                        ++nbEmprunts;
+                    }
+                    int reduction = (nbEmprunts / 10);
+                    if (nbEmprunts != 0 && nbEmprunts % 10 == 0) { // 10, 2O, 30...
+                        reduction -= 1;
+                    }
+
+                    double lower = (1 - Math.floor(reduction) / 10);
+                    double price = e.cout();
+                    facture += price * lower;
+
                 }
+
             }
         }
         return facture;
@@ -114,7 +130,6 @@ public class JRegistre implements IRegistre {
 
 
     private class Emprunt {
-
         private IVelo velo;
         private long debut, fin;
         private boolean enCours;
