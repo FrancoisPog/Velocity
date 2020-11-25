@@ -67,7 +67,6 @@ public class Velo implements IVelo {
     }
 
     @Override
-
     public int arrimer() {
         if (this.estDecroche) {
             this.estDecroche = false;
