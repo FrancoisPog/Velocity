@@ -26,7 +26,7 @@ public class TestsTP7 {
     private IRegistre jReg;
 
     private Set<IVelo> fillSet(int size, boolean ok) {
-        Set<IVelo> setVelos = new HashSet<IVelo>();
+        Set<IVelo> setVelos = new HashSet<>();
         for (int i = 0; i < size; i++) {
             IVelo v = new Velo();
             if (!ok) {
@@ -329,6 +329,6 @@ public class TestsTP7 {
         double tarif = 15 * (v.tarif() / 20);
         tarif += 10 * v.tarif();
         tarif += 2 * v.tarif() * 0.9;
-        Assert.assertEquals(tarif, this.jReg.facturation(this.fdv, timeNow, newTime), 0.01);
+        Assert.assertEquals(tarif, this.jReg.facturation(this.fdv, timeNow, newTime), 0.1);
     }
 }
