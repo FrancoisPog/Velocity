@@ -33,8 +33,11 @@ public class Ville implements Iterable<Station> {
             boolean first = true;
             for (Station s : builder.getStations()) {
                 s.setRegistre(this.reg);
-                if (first) this.setStationPrincipale(s);
                 stations.put(s.getNom(), s);
+                if (first) {
+                    this.setStationPrincipale(s);
+                    first = false;
+                }
             }
         } catch (StationParserException e) {
             // Aucune station ajoutée à la ville
@@ -42,7 +45,7 @@ public class Ville implements Iterable<Station> {
     }
 
     public void setStationPrincipale(Station st) {
-        if (st != null && this.stations.get(st) != null) {
+        if (st != null && this.stations.get(st.getNom()) != null) {
             this.stationPrincipale = st;
         }
     }
@@ -82,7 +85,8 @@ public class Ville implements Iterable<Station> {
 
     @Override
     public Iterator<Station> iterator() {
-        return new ClosestStationIterator((Set<Station>)this.stations.values(), this.stationPrincipale);
+        HashSet<Station> stTmp = new HashSet<>(this.stations.values());
+        return new ClosestStationIterator(stTmp, this.stationPrincipale);
     }
 
     public Map<Abonne, Double> facturation(int mois, int annee) {

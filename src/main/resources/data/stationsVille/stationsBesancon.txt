@@ -1,0 +1,35 @@
+station "Station gare Viotte" {
+    longitude : 6.022715427111734 ;
+    latitude : 47.246501551427329 ;
+    capacite : 10
+}
+
+station "Station Saint Jacques" {
+    longitude : 6.020961226259578 ;
+    latitude : 47.234970856296655 ;
+    capacite : 10
+}
+
+station "Station Granvelle" {
+    longitude : 6.025353690286829 ;
+    latitude : 47.235310381596307 ;
+    capacite : 10
+}
+
+station "Station Victor Hugo" {
+    longitude :6.029500146346702 ;
+    latitude : 47.234841756122286 ;
+    capacite : 10
+}
+
+station "Station Mairie" {
+    longitude : 6.022315779424154 ;
+    latitude : 47.236701239866434 ;
+    capacite : 10
+}
+
+station "Station Jean Cornet" {
+    longitude : 6.029768734531883 ;
+    latitude : 47.236109146208591 ;
+    capacite : 10
+}
