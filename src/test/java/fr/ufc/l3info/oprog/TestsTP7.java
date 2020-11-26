@@ -329,6 +329,6 @@ public class TestsTP7 {
         double tarif = 15 * (v.tarif() / 20);
         tarif += 10 * v.tarif();
         tarif += 2 * v.tarif() * 0.9;
-        Assert.assertEquals(tarif, this.jReg.facturation(this.fdv, timeNow, newTime), 0.01);
+        Assert.assertEquals(tarif, this.jReg.facturation(this.fdv, timeNow, newTime), 0.1);
     }
 }
