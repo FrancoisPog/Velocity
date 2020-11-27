@@ -7,7 +7,7 @@ public class ClosestStationIterator implements Iterator<Station> {
     private Station current;
 
     ClosestStationIterator(Set<Station> stations, Station s){
-        this.stations = stations;
+        this.stations = new HashSet<>(stations);
         this.current = s;
     }
 
@@ -42,6 +42,4 @@ public class ClosestStationIterator implements Iterator<Station> {
 
     @Override
     public void remove() {}
-
-
 }
