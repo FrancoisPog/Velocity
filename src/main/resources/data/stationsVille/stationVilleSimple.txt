@@ -1,0 +1,5 @@
+station "Station gare Viotte" {
+    longitude : 6.022715427111734 ;
+    latitude : 47.246501551427329 ;
+    capacite : 7
+}

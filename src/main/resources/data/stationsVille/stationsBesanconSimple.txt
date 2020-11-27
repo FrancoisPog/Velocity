@@ -1,0 +1,17 @@
+station "Station gare Viotte" {
+    longitude : 6.022715427111734 ;
+    latitude : 47.246501551427329 ;
+    capacite : 5
+}
+
+station "Station Saint Jacques" {
+    longitude : 6.020961226259578 ;
+    latitude : 47.234970856296655 ;
+    capacite : 6
+}
+
+station "Station Granvelle" {
+    longitude : 6.025353690286829 ;
+    latitude : 47.235310381596307 ;
+    capacite : 5
+}
