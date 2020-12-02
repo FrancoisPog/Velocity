@@ -78,6 +78,22 @@ public class ClosestStationIteratorTest {
     }
 
     @Test
+    public void testStationPrincipaleNonIncluse() {
+        Iterator<Station> iter = new ClosestStationIterator(
+                this.listeStations,
+                new Station("Station Spatiale Internationale", 10, 10, 10)
+        );
+
+        int nbStations = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            ++nbStations;
+        }
+
+        Assert.assertEquals(0, nbStations);
+    }
+
+    @Test
     public void testStationPlusProche() {
         Station oldStation = null;
         while (this.iterator.hasNext()) {
