@@ -7,6 +7,12 @@ public class ClosestStationIterator implements Iterator<Station> {
     private Station current;
 
     ClosestStationIterator(Set<Station> stations, Station s){
+        if (s == null) {
+            this.stations = new HashSet<>();
+            this.current = null;
+            return;
+        }
+
         this.stations = new HashSet<>(stations);
         this.current = s;
     }

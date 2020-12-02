@@ -44,7 +44,33 @@ public class ClosestStationIteratorTest {
 
         int nbStations = 0;
         while (iter.hasNext()) {
-            Assert.assertNotNull(iter.next());
+            iter.next();
+            ++nbStations;
+        }
+
+        Assert.assertEquals(0, nbStations);
+    }
+
+    @Test
+    public void testAucuneStationPrincipale() {
+        Iterator<Station> iter = new ClosestStationIterator(this.listeStations, null);
+
+        int nbStations = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            ++nbStations;
+        }
+
+        Assert.assertEquals(0, nbStations);
+    }
+
+    @Test
+    public void testListeStationsNull() {
+        Iterator<Station> iter = new ClosestStationIterator(null, null);
+
+        int nbStations = 0;
+        while (iter.hasNext()) {
+            iter.next();
             ++nbStations;
         }
 
