@@ -140,13 +140,12 @@ public class ASTCheckerVisitorTest {
         root.accept(checker);
 
         Map<String,ERROR_KIND> errors = checker.getErrors();
-        assertEquals(6,errors.size());
+        assertEquals(5,errors.size());
         assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_DECLARATION));
         assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));
         assertTrue(errors.containsValue(ERROR_KIND.WRONG_NUMBER_VALUE));
         assertTrue(errors.containsValue(ERROR_KIND.EMPTY_STATION_NAME));
         assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_STATION_NAME));
-        assertEquals(Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE),2);
         //print_errors(errors);
     }
 
@@ -189,8 +188,8 @@ public class ASTCheckerVisitorTest {
         root.accept(checker);
 
         Map<String,ERROR_KIND> errors = checker.getErrors();
-        assertEquals(2,errors.size());
-        assertEquals(2,Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE));
+        assertEquals(1,errors.size());
+        assertEquals(1,Collections.frequency(errors.values(),ERROR_KIND.WRONG_NUMBER_VALUE));
         //print_errors(errors);
     }
 
@@ -358,7 +357,7 @@ public class ASTCheckerVisitorTest {
         node.accept(visitor);
 
         Map<String, ERROR_KIND> errors = visitor.getErrors();
-        Assert.assertEquals(2, errors.size());
+        Assert.assertEquals(1, errors.size());
         Assert.assertTrue(errors.containsValue(ERROR_KIND.WRONG_NUMBER_VALUE));
     }
 
@@ -416,7 +415,7 @@ public class ASTCheckerVisitorTest {
         node.accept(visitor);
 
         Map<String, ERROR_KIND> errors = visitor.getErrors();
-        Assert.assertEquals(6, errors.size());
+        Assert.assertEquals(5, errors.size());
         Assert.assertTrue(errors.containsValue(ERROR_KIND.EMPTY_STATION_NAME));
         Assert.assertTrue(errors.containsValue(ERROR_KIND.DUPLICATE_STATION_NAME));
         Assert.assertTrue(errors.containsValue(ERROR_KIND.MISSING_DECLARATION));

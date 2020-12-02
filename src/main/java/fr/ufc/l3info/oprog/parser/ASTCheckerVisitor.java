@@ -105,8 +105,7 @@ public class ASTCheckerVisitor implements ASTNodeVisitor {
         if (key.equals("capacite")) {
             if (value.contains(".")) {
                 this.errors.put(n.getLCPrefix() + " La capacité doit être un entier", ERROR_KIND.WRONG_NUMBER_VALUE);
-            }
-            if (Double.parseDouble(value) <= 0) {
+            }else if (Double.parseDouble(value) <= 0) {
                 this.errors.put(n.getLCPrefix() + " La capacité doit être strictement positive", ERROR_KIND.WRONG_NUMBER_VALUE);
             }
 
