@@ -7,10 +7,15 @@ public class ClosestStationIterator implements Iterator<Station> {
     private Station current;
 
     ClosestStationIterator(Set<Station> stations, Station s){
-        this.stations = stations;
+        if (stations == null || s == null || !stations.contains(s)) {
+            this.stations = new HashSet<>();
+            this.current = null;
+            return;
+        }
+
+        this.stations = new HashSet<>(stations);
         this.current = s;
     }
-
 
     @Override
     public boolean hasNext() {
@@ -26,7 +31,7 @@ public class ClosestStationIterator implements Iterator<Station> {
         // Calcul de la station la plus proche de la station courante
         Station closest = null;
         double min = 0;
-        for(Station s : this.stations){
+        for(Station s : this.stations) {
             double distance = s.distance(this.current);
             if(closest == null || distance < min){
                 min = distance;
@@ -43,6 +48,4 @@ public class ClosestStationIterator implements Iterator<Station> {
 
     @Override
     public void remove() {}
-
-
 }
