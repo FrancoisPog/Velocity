@@ -30,19 +30,25 @@ public class Ville implements Iterable<Station> {
             ASTNode n = parser.parse(f);
             ASTStationBuilder builder = new ASTStationBuilder();
             n.accept(builder);
-            boolean first = true;
+
+            String nameFirst = n.getChild(0).getChild(0).toString();
+            nameFirst = nameFirst.substring(1,nameFirst.length()-1);
+            
             for (Station s : builder.getStations()) {
                 s.setRegistre(this.reg);
-                if (first) this.setStationPrincipale(s);
                 stations.put(s.getNom(), s);
+               if (s.getNom().equals(nameFirst)) {
+                    this.setStationPrincipale(s);
+                }
             }
         } catch (StationParserException e) {
             // Aucune station ajoutée à la ville
         }
+        //System.out.println("Station principale : "+this.stationPrincipale.getNom());
     }
 
     public void setStationPrincipale(Station st) {
-        if (st != null && this.stations.get(st) != null) {
+        if (st != null && this.stations.get(st.getNom()) != null) {
             this.stationPrincipale = st;
         }
     }
@@ -57,7 +63,7 @@ public class Ville implements Iterable<Station> {
         Station bestStation = this.stationPrincipale;
         double bestDistance = s.distance(this.stationPrincipale);
 
-        for (Station current : (LinkedList<Station>)this.stations.values()) {
+        for (Station current : this.stations.values()) {
             double newDistance = s.distance(current);
             if (newDistance < bestDistance) {
                 bestDistance = newDistance;
@@ -82,13 +88,13 @@ public class Ville implements Iterable<Station> {
 
     @Override
     public Iterator<Station> iterator() {
-        return new ClosestStationIterator((Set<Station>)this.stations.values(), this.stationPrincipale);
+        return new ClosestStationIterator(new HashSet<>(this.stations.values()), this.stationPrincipale);
     }
 
     public Map<Abonne, Double> facturation(int mois, int annee) {
         long debut = 0, fin = 0;
         if (mois >= 1 && mois <= 12) {
-            Date tmp = new Date(annee, mois, 1);
+            Date tmp = new Date(annee - 1900, mois-1, 1);
             debut = tmp.getTime();
 
             if (mois == 12) {
@@ -97,7 +103,7 @@ public class Ville implements Iterable<Station> {
             } else {
                 ++mois;
             }
-            tmp = new Date(annee, mois, 1);
+            tmp = new Date(annee - 1900, mois-1, 1);
             fin = tmp.getTime();
         }
 

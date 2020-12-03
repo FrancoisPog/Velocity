@@ -14,12 +14,15 @@ public class ClosestStationIterator implements Iterator<Station> {
 
     @Override
     public boolean hasNext() {
-        return this.stations.size() == 0;
+        return this.stations.size() != 0;
     }
 
     @Override
     public Station next() {
         Station res = this.current;
+        // Suppression de la station courante des stations restantes
+        this.stations.remove(this.current);
+
         // Calcul de la station la plus proche de la station courante
         Station closest = null;
         double min = 0;
@@ -30,8 +33,7 @@ public class ClosestStationIterator implements Iterator<Station> {
                 closest = s;
             }
         }
-        // Suppression de la station courante des stations restantes
-        this.stations.remove(this.current);
+
         // La prochaine station devient la plus proche de la station courante
         this.current = closest;
 

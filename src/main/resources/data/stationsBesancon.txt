@@ -1,0 +1,179 @@
+station "Gare Viotte" {
+    latitude: 47.24650155142733;
+    longitude: 6.022715427111734;
+    capacite: 10
+}
+
+station "Saint Jacques" {
+    latitude: 47.234970856296655;
+    longitude: 6.020961226259578;
+    capacite: 10
+}
+
+station "Granvelle" {
+    latitude: 47.23531038159631;
+    longitude: 6.025353690286829;
+    capacite: 9
+}
+
+station "Victor Hugo" {
+    latitude: 47.234841756122286;
+    longitude: 6.029500146346702;
+    capacite: 8
+}
+
+station "Mairie" {
+    latitude: 47.236701239866434;
+    longitude: 6.022315779424154;
+    capacite: 7
+}
+
+station "Jean Cornet" {
+    latitude: 47.23610914620859;
+    longitude: 6.029768734531883;
+    capacite: 11
+}
+
+station "Morand" {
+    latitude: 47.23821251626431;
+    longitude: 6.026334686781786;
+    capacite: 9
+}
+
+station "8 Septembre" {
+    latitude: 47.2379370805839;
+    longitude: 6.024489718361363;
+    capacite: 9
+}
+
+station "Révolution" {
+    latitude: 47.23959562866542;
+    longitude: 6.023369797386198;
+    capacite: 9
+}
+
+station "Madeleine" {
+    latitude: 47.239899329385075;
+    longitude: 6.019882697811857;
+    capacite: 10
+}
+
+station "Marulaz" {
+    latitude: 47.239626225018384;
+    longitude: 6.01714739076459;
+    capacite: 9
+}
+
+station "Belfort" {
+    latitude: 47.23952025100452;
+    longitude: 6.013118317645888;
+    capacite: 6
+}
+
+station "La City" {
+    latitude: 47.235275153213244;
+    longitude: 6.015154541801688;
+    capacite: 10
+}
+
+station "Square Bouchot" {
+    latitude: 47.24377512399861;
+    longitude: 6.022024973914319;
+    capacite: 11
+}
+
+station "Isembart" {
+    latitude: 47.24258965823812;
+    longitude: 6.024678430323917;
+    capacite: 6
+}
+
+station "Office de tourisme" {
+    latitude: 47.24242970499319;
+    longitude: 6.02991128269818;
+    capacite: 10
+}
+
+station "Médiathèque" {
+    latitude: 47.23997217322187;
+    longitude: 6.027427292418682;
+    capacite: 6
+}
+
+station "Bersot" {
+    latitude: 47.23883078499703;
+    longitude: 6.029203547630531;
+    capacite: 11
+}
+
+station "Gare de la Mouillère" {
+    latitude: 47.23982496297785;
+    longitude: 6.033786686212534;
+    capacite: 7
+}
+
+station "Tassigny" {
+    latitude: 47.237986443431204;
+    longitude: 6.032170199084378;
+    capacite: 7
+}
+
+station "Jacobins" {
+    latitude: 47.234654921102994;
+    longitude: 6.032794687342802;
+    capacite: 9
+}
+
+station "Rivotte" {
+    latitude: 47.232117826784354;
+    longitude: 6.035021926715934;
+    capacite: 9
+}
+
+station "Déportés" {
+    latitude: 47.23075380170369;
+    longitude: 6.028169214739356;
+    capacite: 10
+}
+
+station "Place Flore" {
+    latitude: 47.245774714380005;
+    longitude: 6.027867896912155;
+    capacite: 11
+}
+
+station "Beaux Arts" {
+    latitude: 47.2409725216023;
+    longitude: 6.025236465176138;
+    capacite: 6
+}
+
+station "Place de la Liberté" {
+    latitude: 47.24734936179419;
+    longitude: 6.028749817937948;
+    capacite: 11
+}
+
+station "Xavier Marmier" {
+    latitude: 47.241512791039895;
+    longitude: 6.00740426419181;
+    capacite: 7
+}
+
+station "Place Leclerc" {
+    latitude: 47.24236004459498;
+    longitude: 6.014530660962009;
+    capacite: 11
+}
+
+station "Gare d'Eau" {
+    latitude: 47.23297822525739;
+    longitude: 6.020199329897111;
+    capacite: 10
+}
+
+station "Beauregard" {
+    latitude: 47.23199394284275;
+    longitude: 6.02341695664569;
+    capacite: 11
+}
