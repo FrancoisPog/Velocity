@@ -25,7 +25,6 @@ public class ClosestStationIterator implements Iterator<Station> {
     @Override
     public Station next() {
         Station res = this.current;
-
         // Suppression de la station courante des stations restantes
         this.stations.remove(this.current);
 
